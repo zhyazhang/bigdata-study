@@ -1,0 +1,2471 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "//加载数据\r\nval df = spark.\r\n        read.\r\n        option(\"inferSchema\", \"true\").\r\n        csv(\"hdfs://hadoop102:8020/analysis/UserBehavior.csv\")\r\n        \r\n//格式化表头\r\nval data=df.toDF(\"userid\",\"itemid\",\"cateid\",\"behavior\",\"timestamp\")\r\n\r\n//添加日期、小时列\r\n\r\nval parsed = data.withColumn(\"date\",from_unixtime(col(\"timestamp\"),\"yyyy-MM-dd\")).\r\n            withColumn(\"hour\",from_unixtime(col(\"timestamp\"),\"HH\"))\r\n            \r\n//删除异常值\r\n\r\nval datadf = parsed.filter((col(\"date\")>\"2017-11-24\").and((col(\"date\") < \"2017-12-04\")))\r\n\r\ndatadf.createOrReplaceTempView(\"user\")\r\n\r\n\r\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T19:08:26+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "date": "string",
+                      "count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mdf\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [_c0: int, _c1: int ... 3 more fields]\n\u001b[1m\u001b[34mdata\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [userid: int, itemid: int ... 3 more fields]\n\u001b[1m\u001b[34mparsed\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [userid: int, itemid: int ... 5 more fields]\n\u001b[1m\u001b[34mdatadf\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Dataset[org.apache.spark.sql.Row]\u001b[0m = [userid: int, itemid: int ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=54",
+              "$$hashKey": "object:25268"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=55",
+              "$$hashKey": "object:25269"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637833320433_1995157358",
+      "id": "paragraph_1637833320433_1995157358",
+      "dateCreated": "2021-11-25T17:42:00+0800",
+      "dateStarted": "2021-11-25T19:08:26+0800",
+      "dateFinished": "2021-11-25T19:09:54+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:14999"
+    },
+    {
+      "text": "%spark.sql\n\nselect \nsum(if(behavior='pv',1,0)) as PV,\ncount(distinct userid) as UV,\nsum(if(behavior='pv',1,0))/count(distinct userid) as PER_PV\nfrom user;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T19:15:17+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "PV": "string",
+                      "UV": "string",
+                      "PER_PV": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=56",
+              "$$hashKey": "object:25581"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637837182518_1078859212",
+      "id": "paragraph_1637837182518_1078859212",
+      "dateCreated": "2021-11-25T18:46:22+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:19049",
+      "dateFinished": "2021-11-25T19:15:16+0800",
+      "dateStarted": "2021-11-25T19:13:15+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "PV\tUV\tPER_PV\n89660688\t987991\t90.75051088522062\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\nselect `date`,\nsum(if(behavior='pv',1,0)) as PER_PV,\ncount(distinct userid) as PER_UV,\nsum(if(behavior='pv',1,0))/count(distinct userid) as PER_ONE_PER_DAY_PV\nfrom user\ngroup by `date`\norder by `date`;\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:23:28+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "lineChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "date": "string",
+                      "PER_PV": "string",
+                      "PER_UV": "string",
+                      "PER_ONE_PER_DAY_PV": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "date",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "PER_UV",
+                  "index": 2,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=62",
+              "$$hashKey": "object:37779"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637837411717_2000394947",
+      "id": "paragraph_1637837411717_2000394947",
+      "dateCreated": "2021-11-25T18:50:11+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:20866",
+      "dateFinished": "2021-11-25T19:24:57+0800",
+      "dateStarted": "2021-11-25T19:22:30+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "date\tPER_PV\tPER_UV\tPER_ONE_PER_DAY_PV\n2017-11-25\t9353423\t706641\t13.236456701493402\n2017-11-26\t9567423\t715516\t13.371361367181168\n2017-11-27\t9041187\t710094\t12.73238050173639\n2017-11-28\t8842933\t709257\t12.46788258698892\n2017-11-29\t9210821\t718922\t12.81198933959456\n2017-11-30\t9358998\t730597\t12.810069025741962\n2017-12-01\t9718959\t740139\t13.131261830548045\n2017-12-02\t12329644\t970401\t12.705720624772646\n2017-12-03\t12237300\t966977\t12.655213102276477\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--环比数据\n\nWITH T1 AS (\n    SELECT\n        date AS date,\n        WEEKDAY( date ) WEEKDAY,\n        sum(IF( behavior = 'pv', 1, 0 )) AS PER_DAY_PV,\n        count( DISTINCT userid ) AS PER_DAY_UV,\n        sum(IF( behavior = 'pv', 1, 0 ))/ count( DISTINCT userid ) AS PER_ONE_DAY_PV \n        FROM user\n        GROUP BY date\n    ),\nT2 as   (SELECT\n    *,\n    lag(PER_DAY_PV, 1,PER_DAY_PV ) over ( ORDER BY date ) GROWTH_PV,\n    lag(PER_DAY_UV, 1,PER_DAY_UV ) over ( ORDER BY date ) GROWTH_UV,\n    lag(PER_ONE_DAY_PV,1,PER_ONE_DAY_PV) over ( ORDER BY date ) GROWTH_PER_ONE_PV \nFROM T1)\nselect *,\n(PER_DAY_PV-GROWTH_PV)/GROWTH_PV *100 GROWTH_PV_RATE,\n(PER_DAY_UV-GROWTH_UV)/GROWTH_UV *100 GROWTH_UV_RATE,\n(PER_ONE_DAY_PV-GROWTH_PER_ONE_PV)/GROWTH_PER_ONE_PV *100 GROWTH_PER_ONE_PV_RATE\nFROM  T2\n\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T19:51:22+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "date": "string",
+                      "WEEKDAY": "string",
+                      "PER_DAY_PV": "string",
+                      "PER_DAY_UV": "string",
+                      "PER_ONE_DAY_PV": "string",
+                      "GROWTH_PV": "string",
+                      "GROWTH_UV": "string",
+                      "GROWTH_PER_ONE_PV": "string",
+                      "GROWTH_PV_RATE": "string",
+                      "GROWTH_UV_RATE": "string",
+                      "GROWTH_PER_ONE_PV_RATE": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=73",
+              "$$hashKey": "object:31157"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637840501985_394078429",
+      "id": "paragraph_1637840501985_394078429",
+      "dateCreated": "2021-11-25T19:41:42+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:29673",
+      "dateFinished": "2021-11-25T19:51:21+0800",
+      "dateStarted": "2021-11-25T19:48:51+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "date\tWEEKDAY\tPER_DAY_PV\tPER_DAY_UV\tPER_ONE_DAY_PV\tGROWTH_PV\tGROWTH_UV\tGROWTH_PER_ONE_PV\tGROWTH_PV_RATE\tGROWTH_UV_RATE\tGROWTH_PER_ONE_PV_RATE\n2017-11-25\t5\t9353423\t706641\t13.236456701493402\t9353423\t706641\t13.236456701493402\t0.0\t0.0\t0.0\n2017-11-26\t6\t9567423\t715516\t13.371361367181168\t9353423\t706641\t13.236456701493402\t2.2879324499704548\t1.255941843170719\t1.0191901709809124\n2017-11-27\t0\t9041187\t710094\t12.73238050173639\t9567423\t715516\t13.371361367181168\t-5.500289889973507\t-0.7577748086695476\t-4.778727071224773\n2017-11-28\t1\t8842933\t709257\t12.46788258698892\t9041187\t710094\t12.73238050173639\t-2.192787296623773\t-0.11787171839221286\t-2.0773642031150414\n2017-11-29\t2\t9210821\t718922\t12.81198933959456\t8842933\t709257\t12.46788258698892\t4.160248641485806\t1.3626936357342965\t2.7599454053628865\n2017-11-30\t3\t9358998\t730597\t12.810069025741962\t9210821\t718922\t12.81198933959456\t1.608727387059199\t1.623959205588367\t-0.014988412819411209\n2017-12-01\t4\t9718959\t740139\t13.131261830548045\t9358998\t730597\t12.810069025741962\t3.846148914659454\t1.3060551850062347\t2.50734640196429\n2017-12-02\t5\t12329644\t970401\t12.705720624772646\t9718959\t740139\t13.131261830548045\t26.86177604000593\t31.110642730622224\t-3.240672612173776\n2017-12-03\t6\t12237300\t966977\t12.655213102276477\t12329644\t970401\t12.705720624772646\t-0.7489591751392012\t-0.35284382435714723\t-0.39751796838420106\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--同比数据\n\nWITH T1 AS (\n    SELECT\n        date AS date,\n        WEEKDAY( date ) wd,\n        sum(IF( behavior = 'pv', 1, 0 )) AS PER_DAY_PV,\n        count( DISTINCT userid ) AS PER_DAY_UV,\n        sum(IF( behavior = 'pv', 1, 0 ))/ count( DISTINCT userid ) AS PER_ONE_PER_DAY_UV\n        FROM user \n        GROUP BY date\n    ),\nT2 as   (SELECT\n    *,\n    lag(PER_DAY_PV, 1,PER_DAY_PV ) over (PARTITION BY wd    ORDER BY date ) DAY_ON_DAY_GROWTH_PV,\n    lag(PER_DAY_UV, 1,PER_DAY_UV ) over (PARTITION BY wd ORDER BY date ) DAY_ON_DAY_GROWTH_UV,\n    lag(PER_ONE_PER_DAY_UV,1,PER_ONE_PER_DAY_UV) over (PARTITION BY wd ORDER BY date ) DAY_ON_DAY_ONE \nFROM T1)\nselect *,\n(PER_DAY_PV-DAY_ON_DAY_GROWTH_PV)/DAY_ON_DAY_GROWTH_PV *100 PV_DAY_ON_DAY_RATE,\n(PER_DAY_UV-DAY_ON_DAY_GROWTH_UV)/DAY_ON_DAY_GROWTH_UV *100 UV_DAY_ON_DAY_RATE,\n(PER_ONE_PER_DAY_UV-DAY_ON_DAY_ONE)/DAY_ON_DAY_ONE *100 DAY_ON_DAY_ONE_RATE\nFROM  T2\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:23:52+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "date0",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "wd1",
+                        "visible": true,
+                        "width": 150,
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "PER_DAY_PV2",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "PER_DAY_UV3",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "PER_ONE_PER_DAY_UV4",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "DAY_ON_DAY_GROWTH_PV5",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "DAY_ON_DAY_GROWTH_UV6",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "DAY_ON_DAY_ONE7",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "PV_DAY_ON_DAY_GATE8",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "UV_DAY_ON_DAY_GATE9",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "DAY_ON_DAY_ONE_GATE10",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1,
+                      "paginationPageSize": 250
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "date": "string",
+                      "wd": "string",
+                      "PER_DAY_PV": "string",
+                      "PER_DAY_UV": "string",
+                      "PER_ONE_PER_DAY_UV": "string",
+                      "DAY_ON_DAY_GROWTH_PV": "string",
+                      "DAY_ON_DAY_GROWTH_UV": "string",
+                      "DAY_ON_DAY_ONE": "string",
+                      "PV_DAY_ON_DAY_GATE": "string",
+                      "UV_DAY_ON_DAY_GATE": "string",
+                      "DAY_ON_DAY_ONE_GATE": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "date",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "DAY_ON_DAY_ONE_GATE",
+                  "index": 10,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=68",
+              "$$hashKey": "object:37910"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=69",
+              "$$hashKey": "object:37911"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=70",
+              "$$hashKey": "object:37912"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=71",
+              "$$hashKey": "object:37913"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=72",
+              "$$hashKey": "object:37914"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637837658241_989157470",
+      "id": "paragraph_1637837658241_989157470",
+      "dateCreated": "2021-11-25T18:54:18+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:21760",
+      "dateFinished": "2021-11-25T19:41:01+0800",
+      "dateStarted": "2021-11-25T19:38:30+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "date\twd\tPER_DAY_PV\tPER_DAY_UV\tPER_ONE_PER_DAY_UV\tDAY_ON_DAY_GROWTH_PV\tDAY_ON_DAY_GROWTH_UV\tDAY_ON_DAY_ONE\tPV_DAY_ON_DAY_GATE\tUV_DAY_ON_DAY_GATE\tDAY_ON_DAY_ONE_GATE\n2017-11-28\t1\t8842933\t709257\t12.46788258698892\t8842933\t709257\t12.46788258698892\t0.0\t0.0\t0.0\n2017-11-26\t6\t9567423\t715516\t13.371361367181168\t9567423\t715516\t13.371361367181168\t0.0\t0.0\t0.0\n2017-12-03\t6\t12237300\t966977\t12.655213102276477\t9567423\t715516\t13.371361367181168\t27.905915730913122\t35.14400796068851\t-5.355836591645886\n2017-11-30\t3\t9358998\t730597\t12.810069025741962\t9358998\t730597\t12.810069025741962\t0.0\t0.0\t0.0\n2017-11-25\t5\t9353423\t706641\t13.236456701493402\t9353423\t706641\t13.236456701493402\t0.0\t0.0\t0.0\n2017-12-02\t5\t12329644\t970401\t12.705720624772646\t9353423\t706641\t13.236456701493402\t31.819591608334193\t37.32588400616437\t-4.009653706349349\n2017-12-01\t4\t9718959\t740139\t13.131261830548045\t9718959\t740139\t13.131261830548045\t0.0\t0.0\t0.0\n2017-11-29\t2\t9210821\t718922\t12.81198933959456\t9210821\t718922\t12.81198933959456\t0.0\t0.0\t0.0\n2017-11-27\t0\t9041187\t710094\t12.73238050173639\t9041187\t710094\t12.73238050173639\t0.0\t0.0\t0.0\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\n--每时刻流量情况：浏览量PV，访客数UV，人均浏览量\nselect hour as hour,\nsum(if(behavior='pv',1,0)) as PV,\ncount(distinct userid) as UV,\nsum(if(behavior='pv',1,0))/count(distinct userid) as PER_ONE_PV\nfrom user\ngroup by hour;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:01:58+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "hour": "string",
+                      "PV": "string",
+                      "UV": "string",
+                      "PER_ONE_PV": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "hour",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "PER_ONE_PV",
+                  "index": 3,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=74",
+              "$$hashKey": "object:34868"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=75",
+              "$$hashKey": "object:34869"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=76",
+              "$$hashKey": "object:34870"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=77",
+              "$$hashKey": "object:34871"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=78",
+              "$$hashKey": "object:34872"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637839693069_1892802906",
+      "id": "paragraph_1637839693069_1892802906",
+      "dateCreated": "2021-11-25T19:28:13+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:27486",
+      "dateFinished": "2021-11-25T19:58:19+0800",
+      "dateStarted": "2021-11-25T19:55:47+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "hour\tPV\tUV\tPER_ONE_PV\n07\t2228959\t329994\t6.754544022012522\n15\t4806706\t603739\t7.961562860772618\n11\t4213518\t587526\t7.171628149222332\n01\t1421673\t167416\t8.491858603717684\n22\t7443073\t649704\t11.45609846945686\n16\t4607745\t598367\t7.70053328475668\n18\t4313516\t583797\t7.3887258756040195\n00\t3056936\t318390\t9.601231194447061\n17\t4203397\t585508\t7.179059893289247\n09\t3728498\t520529\t7.1629015866551144\n05\t581694\t84444\t6.888517834304391\n19\t5430878\t624683\t8.693814302614285\n23\t5599903\t514021\t10.894307820108518\n08\t3042342\t444398\t6.8459849054226165\n03\t524992\t71415\t7.351284744101379\n02\t769269\t98335\t7.822941984034169\n06\t1226653\t179928\t6.817465875238985\n20\t6586331\t663343\t9.92899751712161\n10\t4334810\t577797\t7.5023061732753895\n12\t4255794\t593649\t7.1688725155773865\n04\t449628\t64213\t7.0021335243642255\n13\t4653934\t602301\t7.7269239134585535\n14\t4642056\t593591\t7.820293771300441\n21\t7538383\t682751\t11.04118924761736\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n--用户留存分析，这里主要采用群组分析法\n\n\n\ncreate temp view v_remain_time as\nSELECT\n    userid,\n    date,\n    min( date ) over ( PARTITION BY userid ORDER BY date )  firstday\nFROM\n    user \nGROUP BY\n    userid,\n    date;\n    \n--SELECT * FROM v_remain_time;\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:12:12+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "userid": "string",
+                      "date": "string",
+                      "firstday": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=79",
+              "$$hashKey": "object:36240"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637841340329_1509648943",
+      "id": "paragraph_1637841340329_1509648943",
+      "dateCreated": "2021-11-25T19:55:40+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:31172",
+      "dateFinished": "2021-11-25T20:10:11+0800",
+      "dateStarted": "2021-11-25T20:07:35+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "userid\tdate\tfirstday\n148\t2017-11-28\t2017-11-28\n148\t2017-12-02\t2017-11-28\n148\t2017-12-03\t2017-11-28\n463\t2017-11-25\t2017-11-25\n463\t2017-11-26\t2017-11-25\n463\t2017-11-29\t2017-11-25\n463\t2017-12-01\t2017-11-25\n463\t2017-12-02\t2017-11-25\n463\t2017-12-03\t2017-11-25\n471\t2017-11-25\t2017-11-25\n471\t2017-11-28\t2017-11-25\n471\t2017-11-30\t2017-11-25\n471\t2017-12-02\t2017-11-25\n471\t2017-12-03\t2017-11-25\n496\t2017-11-25\t2017-11-25\n496\t2017-11-26\t2017-11-25\n496\t2017-11-27\t2017-11-25\n496\t2017-11-28\t2017-11-25\n496\t2017-11-29\t2017-11-25\n496\t2017-11-30\t2017-11-25\n496\t2017-12-01\t2017-11-25\n496\t2017-12-02\t2017-11-25\n496\t2017-12-03\t2017-11-25\n833\t2017-11-25\t2017-11-25\n833\t2017-11-27\t2017-11-25\n833\t2017-11-28\t2017-11-25\n833\t2017-11-29\t2017-11-25\n833\t2017-11-30\t2017-11-25\n833\t2017-12-01\t2017-11-25\n833\t2017-12-02\t2017-11-25\n833\t2017-12-03\t2017-11-25\n1088\t2017-11-28\t2017-11-28\n1088\t2017-11-29\t2017-11-28\n1088\t2017-11-30\t2017-11-28\n1088\t2017-12-01\t2017-11-28\n1088\t2017-12-02\t2017-11-28\n1088\t2017-12-03\t2017-11-28\n1238\t2017-11-26\t2017-11-26\n1238\t2017-11-27\t2017-11-26\n1238\t2017-11-29\t2017-11-26\n1238\t2017-11-30\t2017-11-26\n1238\t2017-12-01\t2017-11-26\n1238\t2017-12-02\t2017-11-26\n1238\t2017-12-03\t2017-11-26\n1342\t2017-11-27\t2017-11-27\n1342\t2017-11-30\t2017-11-27\n1342\t2017-12-02\t2017-11-27\n1342\t2017-12-03\t2017-11-27\n1580\t2017-11-25\t2017-11-25\n1580\t2017-11-28\t2017-11-25\n1580\t2017-11-29\t2017-11-25\n1580\t2017-11-30\t2017-11-25\n1580\t2017-12-01\t2017-11-25\n1580\t2017-12-02\t2017-11-25\n1580\t2017-12-03\t2017-11-25\n1591\t2017-11-25\t2017-11-25\n1591\t2017-11-26\t2017-11-25\n1591\t2017-11-28\t2017-11-25\n1591\t2017-11-29\t2017-11-25\n1591\t2017-11-30\t2017-11-25\n1591\t2017-12-02\t2017-11-25\n1591\t2017-12-03\t2017-11-25\n1645\t2017-11-28\t2017-11-28\n1645\t2017-11-29\t2017-11-28\n1645\t2017-11-30\t2017-11-28\n1645\t2017-12-01\t2017-11-28\n1645\t2017-12-02\t2017-11-28\n1645\t2017-12-03\t2017-11-28\n1829\t2017-11-28\t2017-11-28\n1829\t2017-11-29\t2017-11-28\n1829\t2017-12-01\t2017-11-28\n1829\t2017-12-02\t2017-11-28\n1829\t2017-12-03\t2017-11-28\n1959\t2017-11-25\t2017-11-25\n1959\t2017-11-26\t2017-11-25\n1959\t2017-11-27\t2017-11-25\n1959\t2017-11-28\t2017-11-25\n1959\t2017-11-29\t2017-11-25\n1959\t2017-11-30\t2017-11-25\n1959\t2017-12-01\t2017-11-25\n1959\t2017-12-02\t2017-11-25\n1959\t2017-12-03\t2017-11-25\n2122\t2017-11-25\t2017-11-25\n2122\t2017-11-26\t2017-11-25\n2122\t2017-11-27\t2017-11-25\n2122\t2017-11-28\t2017-11-25\n2122\t2017-11-29\t2017-11-25\n2122\t2017-11-30\t2017-11-25\n2122\t2017-12-01\t2017-11-25\n2122\t2017-12-02\t2017-11-25\n2122\t2017-12-03\t2017-11-25\n2142\t2017-11-25\t2017-11-25\n2142\t2017-11-26\t2017-11-25\n2142\t2017-11-27\t2017-11-25\n2142\t2017-11-29\t2017-11-25\n2142\t2017-12-01\t2017-11-25\n2142\t2017-12-02\t2017-11-25\n2142\t2017-12-03\t2017-11-25\n2366\t2017-11-26\t2017-11-26\n2366\t2017-11-27\t2017-11-26\n2366\t2017-11-29\t2017-11-26\n2366\t2017-11-30\t2017-11-26\n2366\t2017-12-01\t2017-11-26\n2366\t2017-12-02\t2017-11-26\n2366\t2017-12-03\t2017-11-26\n2659\t2017-11-26\t2017-11-26\n2659\t2017-11-27\t2017-11-26\n2659\t2017-11-28\t2017-11-26\n2659\t2017-11-29\t2017-11-26\n2659\t2017-11-30\t2017-11-26\n2659\t2017-12-02\t2017-11-26\n2659\t2017-12-03\t2017-11-26\n2866\t2017-11-25\t2017-11-25\n2866\t2017-11-26\t2017-11-25\n2866\t2017-11-27\t2017-11-25\n2866\t2017-11-28\t2017-11-25\n2866\t2017-11-30\t2017-11-25\n2866\t2017-12-01\t2017-11-25\n2866\t2017-12-02\t2017-11-25\n2866\t2017-12-03\t2017-11-25\n3175\t2017-11-26\t2017-11-26\n3175\t2017-11-27\t2017-11-26\n3175\t2017-11-29\t2017-11-26\n3175\t2017-11-30\t2017-11-26\n3175\t2017-12-01\t2017-11-26\n3175\t2017-12-02\t2017-11-26\n3749\t2017-11-27\t2017-11-27\n3749\t2017-11-30\t2017-11-27\n3749\t2017-12-01\t2017-11-27\n3749\t2017-12-02\t2017-11-27\n3749\t2017-12-03\t2017-11-27\n3794\t2017-11-25\t2017-11-25\n3794\t2017-11-26\t2017-11-25\n3794\t2017-11-27\t2017-11-25\n3794\t2017-11-28\t2017-11-25\n3794\t2017-11-29\t2017-11-25\n3794\t2017-11-30\t2017-11-25\n3794\t2017-12-01\t2017-11-25\n3794\t2017-12-02\t2017-11-25\n3794\t2017-12-03\t2017-11-25\n3918\t2017-11-25\t2017-11-25\n3918\t2017-11-27\t2017-11-25\n3918\t2017-11-28\t2017-11-25\n3918\t2017-12-02\t2017-11-25\n3918\t2017-12-03\t2017-11-25\n3997\t2017-11-26\t2017-11-26\n3997\t2017-11-30\t2017-11-26\n3997\t2017-12-02\t2017-11-26\n3997\t2017-12-03\t2017-11-26\n4101\t2017-11-25\t2017-11-25\n4101\t2017-11-26\t2017-11-25\n4101\t2017-11-27\t2017-11-25\n4101\t2017-11-28\t2017-11-25\n4101\t2017-11-29\t2017-11-25\n4101\t2017-11-30\t2017-11-25\n4101\t2017-12-01\t2017-11-25\n4101\t2017-12-02\t2017-11-25\n4101\t2017-12-03\t2017-11-25\n4519\t2017-11-25\t2017-11-25\n4519\t2017-11-26\t2017-11-25\n4519\t2017-11-28\t2017-11-25\n4519\t2017-11-29\t2017-11-25\n4519\t2017-11-30\t2017-11-25\n4519\t2017-12-01\t2017-11-25\n4519\t2017-12-02\t2017-11-25\n4519\t2017-12-03\t2017-11-25\n4818\t2017-11-27\t2017-11-27\n4818\t2017-11-29\t2017-11-27\n4818\t2017-11-30\t2017-11-27\n4818\t2017-12-01\t2017-11-27\n4818\t2017-12-02\t2017-11-27\n4818\t2017-12-03\t2017-11-27\n4900\t2017-11-25\t2017-11-25\n4900\t2017-11-26\t2017-11-25\n4900\t2017-11-27\t2017-11-25\n4900\t2017-11-28\t2017-11-25\n4900\t2017-11-30\t2017-11-25\n4900\t2017-12-02\t2017-11-25\n4900\t2017-12-03\t2017-11-25\n4935\t2017-11-26\t2017-11-26\n4935\t2017-11-27\t2017-11-26\n4935\t2017-11-28\t2017-11-26\n4935\t2017-11-29\t2017-11-26\n4935\t2017-12-02\t2017-11-26\n4935\t2017-12-03\t2017-11-26\n5156\t2017-11-25\t2017-11-25\n5156\t2017-11-26\t2017-11-25\n5156\t2017-11-27\t2017-11-25\n5156\t2017-11-29\t2017-11-25\n5156\t2017-12-02\t2017-11-25\n5156\t2017-12-03\t2017-11-25\n5300\t2017-11-26\t2017-11-26\n5300\t2017-11-27\t2017-11-26\n5300\t2017-11-28\t2017-11-26\n5300\t2017-11-29\t2017-11-26\n5300\t2017-11-30\t2017-11-26\n5300\t2017-12-01\t2017-11-26\n5300\t2017-12-02\t2017-11-26\n5300\t2017-12-03\t2017-11-26\n5518\t2017-11-27\t2017-11-27\n5518\t2017-11-28\t2017-11-27\n5518\t2017-12-01\t2017-11-27\n5518\t2017-12-02\t2017-11-27\n5518\t2017-12-03\t2017-11-27\n5803\t2017-11-25\t2017-11-25\n5803\t2017-12-02\t2017-11-25\n5803\t2017-12-03\t2017-11-25\n6336\t2017-11-25\t2017-11-25\n6336\t2017-11-29\t2017-11-25\n6336\t2017-11-30\t2017-11-25\n6336\t2017-12-01\t2017-11-25\n6336\t2017-12-02\t2017-11-25\n6336\t2017-12-03\t2017-11-25\n6357\t2017-11-26\t2017-11-26\n6357\t2017-11-27\t2017-11-26\n6357\t2017-11-28\t2017-11-26\n6357\t2017-11-30\t2017-11-26\n6357\t2017-12-02\t2017-11-26\n6397\t2017-11-25\t2017-11-25\n6397\t2017-11-27\t2017-11-25\n6397\t2017-11-29\t2017-11-25\n6397\t2017-12-01\t2017-11-25\n6397\t2017-12-02\t2017-11-25\n6397\t2017-12-03\t2017-11-25\n6466\t2017-11-26\t2017-11-26\n6466\t2017-11-27\t2017-11-26\n6466\t2017-11-28\t2017-11-26\n6466\t2017-11-29\t2017-11-26\n6466\t2017-12-02\t2017-11-26\n6466\t2017-12-03\t2017-11-26\n6620\t2017-11-26\t2017-11-26\n6620\t2017-11-27\t2017-11-26\n6620\t2017-11-29\t2017-11-26\n6620\t2017-12-02\t2017-11-26\n6620\t2017-12-03\t2017-11-26\n6654\t2017-11-25\t2017-11-25\n6654\t2017-11-26\t2017-11-25\n6654\t2017-11-27\t2017-11-25\n6654\t2017-11-28\t2017-11-25\n6654\t2017-11-29\t2017-11-25\n6654\t2017-11-30\t2017-11-25\n6654\t2017-12-01\t2017-11-25\n6654\t2017-12-02\t2017-11-25\n6654\t2017-12-03\t2017-11-25\n6658\t2017-11-26\t2017-11-26\n6658\t2017-11-27\t2017-11-26\n6658\t2017-11-28\t2017-11-26\n6658\t2017-11-29\t2017-11-26\n6658\t2017-11-30\t2017-11-26\n6658\t2017-12-02\t2017-11-26\n6658\t2017-12-03\t2017-11-26\n7240\t2017-11-26\t2017-11-26\n7240\t2017-11-27\t2017-11-26\n7240\t2017-11-28\t2017-11-26\n7240\t2017-11-29\t2017-11-26\n7240\t2017-11-30\t2017-11-26\n7240\t2017-12-01\t2017-11-26\n7240\t2017-12-02\t2017-11-26\n7240\t2017-12-03\t2017-11-26\n7253\t2017-11-25\t2017-11-25\n7253\t2017-11-26\t2017-11-25\n7253\t2017-11-27\t2017-11-25\n7253\t2017-11-28\t2017-11-25\n7253\t2017-11-29\t2017-11-25\n7253\t2017-11-30\t2017-11-25\n7253\t2017-12-01\t2017-11-25\n7253\t2017-12-02\t2017-11-25\n7253\t2017-12-03\t2017-11-25\n7340\t2017-11-25\t2017-11-25\n7340\t2017-11-26\t2017-11-25\n7340\t2017-11-27\t2017-11-25\n7340\t2017-11-28\t2017-11-25\n7340\t2017-11-29\t2017-11-25\n7340\t2017-11-30\t2017-11-25\n7340\t2017-12-01\t2017-11-25\n7340\t2017-12-02\t2017-11-25\n7340\t2017-12-03\t2017-11-25\n7554\t2017-11-25\t2017-11-25\n7554\t2017-11-26\t2017-11-25\n7554\t2017-11-27\t2017-11-25\n7554\t2017-11-28\t2017-11-25\n7554\t2017-11-29\t2017-11-25\n7554\t2017-12-01\t2017-11-25\n7554\t2017-12-02\t2017-11-25\n7554\t2017-12-03\t2017-11-25\n7754\t2017-11-25\t2017-11-25\n7754\t2017-11-26\t2017-11-25\n7754\t2017-11-27\t2017-11-25\n7754\t2017-11-28\t2017-11-25\n7754\t2017-11-29\t2017-11-25\n7754\t2017-11-30\t2017-11-25\n7754\t2017-12-01\t2017-11-25\n7754\t2017-12-02\t2017-11-25\n7754\t2017-12-03\t2017-11-25\n7833\t2017-11-25\t2017-11-25\n7833\t2017-11-26\t2017-11-25\n7833\t2017-11-27\t2017-11-25\n7833\t2017-11-28\t2017-11-25\n7833\t2017-11-29\t2017-11-25\n7833\t2017-11-30\t2017-11-25\n7833\t2017-12-01\t2017-11-25\n7833\t2017-12-02\t2017-11-25\n7833\t2017-12-03\t2017-11-25\n7880\t2017-11-25\t2017-11-25\n7880\t2017-11-26\t2017-11-25\n7880\t2017-11-27\t2017-11-25\n7880\t2017-11-28\t2017-11-25\n7880\t2017-11-29\t2017-11-25\n7880\t2017-11-30\t2017-11-25\n7880\t2017-12-01\t2017-11-25\n7880\t2017-12-02\t2017-11-25\n7880\t2017-12-03\t2017-11-25\n7982\t2017-11-25\t2017-11-25\n7982\t2017-11-26\t2017-11-25\n7982\t2017-11-27\t2017-11-25\n7982\t2017-11-28\t2017-11-25\n7982\t2017-11-29\t2017-11-25\n7982\t2017-11-30\t2017-11-25\n7982\t2017-12-01\t2017-11-25\n7982\t2017-12-02\t2017-11-25\n7982\t2017-12-03\t2017-11-25\n7993\t2017-11-26\t2017-11-26\n7993\t2017-11-27\t2017-11-26\n7993\t2017-11-29\t2017-11-26\n7993\t2017-11-30\t2017-11-26\n7993\t2017-12-01\t2017-11-26\n7993\t2017-12-02\t2017-11-26\n7993\t2017-12-03\t2017-11-26\n8086\t2017-11-25\t2017-11-25\n8086\t2017-11-26\t2017-11-25\n8086\t2017-11-27\t2017-11-25\n8086\t2017-11-28\t2017-11-25\n8086\t2017-11-29\t2017-11-25\n8086\t2017-11-30\t2017-11-25\n8086\t2017-12-02\t2017-11-25\n8086\t2017-12-03\t2017-11-25\n8389\t2017-11-26\t2017-11-26\n8389\t2017-11-27\t2017-11-26\n8389\t2017-12-01\t2017-11-26\n8389\t2017-12-02\t2017-11-26\n8389\t2017-12-03\t2017-11-26\n8592\t2017-11-25\t2017-11-25\n8592\t2017-11-27\t2017-11-25\n8592\t2017-11-28\t2017-11-25\n8592\t2017-11-29\t2017-11-25\n8592\t2017-11-30\t2017-11-25\n8592\t2017-12-01\t2017-11-25\n8592\t2017-12-02\t2017-11-25\n8592\t2017-12-03\t2017-11-25\n8638\t2017-11-25\t2017-11-25\n8638\t2017-11-26\t2017-11-25\n8638\t2017-11-27\t2017-11-25\n8638\t2017-11-28\t2017-11-25\n8638\t2017-11-29\t2017-11-25\n8638\t2017-11-30\t2017-11-25\n8638\t2017-12-01\t2017-11-25\n8638\t2017-12-02\t2017-11-25\n8638\t2017-12-03\t2017-11-25\n9376\t2017-11-27\t2017-11-27\n9376\t2017-11-29\t2017-11-27\n9376\t2017-12-03\t2017-11-27\n9427\t2017-11-25\t2017-11-25\n9427\t2017-11-26\t2017-11-25\n9427\t2017-11-29\t2017-11-25\n9427\t2017-12-02\t2017-11-25\n9427\t2017-12-03\t2017-11-25\n9465\t2017-11-25\t2017-11-25\n9465\t2017-11-26\t2017-11-25\n9465\t2017-11-27\t2017-11-25\n9465\t2017-11-29\t2017-11-25\n9465\t2017-11-30\t2017-11-25\n9465\t2017-12-01\t2017-11-25\n9465\t2017-12-02\t2017-11-25\n9465\t2017-12-03\t2017-11-25\n9852\t2017-11-25\t2017-11-25\n9852\t2017-11-27\t2017-11-25\n9852\t2017-11-29\t2017-11-25\n9852\t2017-12-02\t2017-11-25\n9852\t2017-12-03\t2017-11-25\n9900\t2017-11-25\t2017-11-25\n9900\t2017-11-26\t2017-11-25\n9900\t2017-11-27\t2017-11-25\n9900\t2017-11-28\t2017-11-25\n9900\t2017-11-29\t2017-11-25\n9900\t2017-11-30\t2017-11-25\n9900\t2017-12-01\t2017-11-25\n9900\t2017-12-02\t2017-11-25\n9900\t2017-12-03\t2017-11-25\n10206\t2017-11-28\t2017-11-28\n10206\t2017-11-29\t2017-11-28\n10206\t2017-12-02\t2017-11-28\n10206\t2017-12-03\t2017-11-28\n10362\t2017-11-25\t2017-11-25\n10362\t2017-11-26\t2017-11-25\n10362\t2017-11-27\t2017-11-25\n10362\t2017-11-28\t2017-11-25\n10362\t2017-11-30\t2017-11-25\n10362\t2017-12-01\t2017-11-25\n10362\t2017-12-02\t2017-11-25\n10362\t2017-12-03\t2017-11-25\n10623\t2017-11-25\t2017-11-25\n10623\t2017-11-26\t2017-11-25\n10623\t2017-11-27\t2017-11-25\n10623\t2017-11-28\t2017-11-25\n10623\t2017-11-29\t2017-11-25\n10623\t2017-11-30\t2017-11-25\n10623\t2017-12-01\t2017-11-25\n10623\t2017-12-02\t2017-11-25\n10623\t2017-12-03\t2017-11-25\n10817\t2017-11-25\t2017-11-25\n10817\t2017-11-26\t2017-11-25\n10817\t2017-11-27\t2017-11-25\n10817\t2017-11-28\t2017-11-25\n10817\t2017-11-29\t2017-11-25\n10817\t2017-11-30\t2017-11-25\n10817\t2017-12-01\t2017-11-25\n10817\t2017-12-02\t2017-11-25\n10817\t2017-12-03\t2017-11-25\n11033\t2017-11-26\t2017-11-26\n11033\t2017-11-29\t2017-11-26\n11033\t2017-12-01\t2017-11-26\n11033\t2017-12-02\t2017-11-26\n11033\t2017-12-03\t2017-11-26\n11141\t2017-11-25\t2017-11-25\n11141\t2017-11-27\t2017-11-25\n11141\t2017-11-30\t2017-11-25\n11141\t2017-12-01\t2017-11-25\n11141\t2017-12-02\t2017-11-25\n11141\t2017-12-03\t2017-11-25\n11317\t2017-11-25\t2017-11-25\n11317\t2017-11-26\t2017-11-25\n11317\t2017-11-27\t2017-11-25\n11317\t2017-11-28\t2017-11-25\n11317\t2017-11-29\t2017-11-25\n11317\t2017-11-30\t2017-11-25\n11317\t2017-12-01\t2017-11-25\n11317\t2017-12-02\t2017-11-25\n11317\t2017-12-03\t2017-11-25\n11458\t2017-11-27\t2017-11-27\n11458\t2017-11-28\t2017-11-27\n11458\t2017-12-01\t2017-11-27\n11458\t2017-12-02\t2017-11-27\n11458\t2017-12-03\t2017-11-27\n11748\t2017-11-26\t2017-11-26\n11748\t2017-11-28\t2017-11-26\n11748\t2017-11-29\t2017-11-26\n11748\t2017-11-30\t2017-11-26\n11748\t2017-12-01\t2017-11-26\n11748\t2017-12-02\t2017-11-26\n11748\t2017-12-03\t2017-11-26\n11858\t2017-11-25\t2017-11-25\n11858\t2017-11-26\t2017-11-25\n11858\t2017-11-27\t2017-11-25\n11858\t2017-11-28\t2017-11-25\n11858\t2017-11-29\t2017-11-25\n11858\t2017-11-30\t2017-11-25\n11858\t2017-12-01\t2017-11-25\n11858\t2017-12-02\t2017-11-25\n11858\t2017-12-03\t2017-11-25\n12027\t2017-11-25\t2017-11-25\n12027\t2017-11-26\t2017-11-25\n12027\t2017-11-27\t2017-11-25\n12027\t2017-11-28\t2017-11-25\n12027\t2017-11-29\t2017-11-25\n12027\t2017-11-30\t2017-11-25\n12027\t2017-12-01\t2017-11-25\n12027\t2017-12-02\t2017-11-25\n12027\t2017-12-03\t2017-11-25\n12046\t2017-11-26\t2017-11-26\n12046\t2017-11-27\t2017-11-26\n12046\t2017-11-28\t2017-11-26\n12046\t2017-11-29\t2017-11-26\n12046\t2017-11-30\t2017-11-26\n12046\t2017-12-01\t2017-11-26\n12046\t2017-12-02\t2017-11-26\n12046\t2017-12-03\t2017-11-26\n12799\t2017-11-30\t2017-11-30\n12799\t2017-12-01\t2017-11-30\n12799\t2017-12-02\t2017-11-30\n12799\t2017-12-03\t2017-11-30\n12940\t2017-11-25\t2017-11-25\n12940\t2017-11-26\t2017-11-25\n12940\t2017-11-27\t2017-11-25\n12940\t2017-11-28\t2017-11-25\n12940\t2017-11-29\t2017-11-25\n12940\t2017-11-30\t2017-11-25\n12940\t2017-12-01\t2017-11-25\n12940\t2017-12-02\t2017-11-25\n12940\t2017-12-03\t2017-11-25\n13285\t2017-11-28\t2017-11-28\n13285\t2017-11-29\t2017-11-28\n13285\t2017-11-30\t2017-11-28\n13285\t2017-12-01\t2017-11-28\n13285\t2017-12-03\t2017-11-28\n13289\t2017-11-25\t2017-11-25\n13289\t2017-11-27\t2017-11-25\n13289\t2017-11-28\t2017-11-25\n13289\t2017-11-29\t2017-11-25\n13289\t2017-11-30\t2017-11-25\n13289\t2017-12-01\t2017-11-25\n13289\t2017-12-02\t2017-11-25\n13289\t2017-12-03\t2017-11-25\n13623\t2017-11-25\t2017-11-25\n13623\t2017-11-26\t2017-11-25\n13623\t2017-11-27\t2017-11-25\n13623\t2017-11-28\t2017-11-25\n13623\t2017-11-29\t2017-11-25\n13623\t2017-11-30\t2017-11-25\n13623\t2017-12-01\t2017-11-25\n13623\t2017-12-02\t2017-11-25\n13623\t2017-12-03\t2017-11-25\n13832\t2017-11-26\t2017-11-26\n13832\t2017-11-27\t2017-11-26\n13832\t2017-11-28\t2017-11-26\n13832\t2017-11-29\t2017-11-26\n13832\t2017-12-02\t2017-11-26\n13832\t2017-12-03\t2017-11-26\n13840\t2017-11-25\t2017-11-25\n13840\t2017-11-26\t2017-11-25\n13840\t2017-12-01\t2017-11-25\n13840\t2017-12-02\t2017-11-25\n13840\t2017-12-03\t2017-11-25\n14450\t2017-11-25\t2017-11-25\n14450\t2017-11-26\t2017-11-25\n14450\t2017-11-27\t2017-11-25\n14450\t2017-11-29\t2017-11-25\n14450\t2017-11-30\t2017-11-25\n14450\t2017-12-01\t2017-11-25\n14450\t2017-12-02\t2017-11-25\n14450\t2017-12-03\t2017-11-25\n14570\t2017-11-26\t2017-11-26\n14570\t2017-11-27\t2017-11-26\n14570\t2017-11-28\t2017-11-26\n14570\t2017-11-29\t2017-11-26\n14570\t2017-11-30\t2017-11-26\n14570\t2017-12-02\t2017-11-26\n14570\t2017-12-03\t2017-11-26\n14832\t2017-11-25\t2017-11-25\n14832\t2017-11-26\t2017-11-25\n14832\t2017-11-28\t2017-11-25\n14832\t2017-11-29\t2017-11-25\n14832\t2017-12-01\t2017-11-25\n14832\t2017-12-02\t2017-11-25\n14832\t2017-12-03\t2017-11-25\n15447\t2017-11-25\t2017-11-25\n15447\t2017-12-01\t2017-11-25\n15447\t2017-12-02\t2017-11-25\n15447\t2017-12-03\t2017-11-25\n15619\t2017-11-25\t2017-11-25\n15619\t2017-11-30\t2017-11-25\n15619\t2017-12-01\t2017-11-25\n15619\t2017-12-02\t2017-11-25\n15619\t2017-12-03\t2017-11-25\n15727\t2017-11-25\t2017-11-25\n15727\t2017-11-26\t2017-11-25\n15727\t2017-11-27\t2017-11-25\n15727\t2017-11-28\t2017-11-25\n15727\t2017-11-29\t2017-11-25\n15727\t2017-11-30\t2017-11-25\n15727\t2017-12-01\t2017-11-25\n15727\t2017-12-02\t2017-11-25\n15727\t2017-12-03\t2017-11-25\n15790\t2017-11-25\t2017-11-25\n15790\t2017-11-26\t2017-11-25\n15790\t2017-11-27\t2017-11-25\n15790\t2017-11-28\t2017-11-25\n15790\t2017-11-29\t2017-11-25\n15790\t2017-11-30\t2017-11-25\n15790\t2017-12-01\t2017-11-25\n15790\t2017-12-02\t2017-11-25\n15790\t2017-12-03\t2017-11-25\n15846\t2017-11-25\t2017-11-25\n15846\t2017-11-26\t2017-11-25\n15846\t2017-11-28\t2017-11-25\n15846\t2017-11-29\t2017-11-25\n15846\t2017-11-30\t2017-11-25\n15846\t2017-12-01\t2017-11-25\n15846\t2017-12-02\t2017-11-25\n15846\t2017-12-03\t2017-11-25\n16339\t2017-11-25\t2017-11-25\n16339\t2017-11-27\t2017-11-25\n16339\t2017-11-29\t2017-11-25\n16339\t2017-11-30\t2017-11-25\n16339\t2017-12-01\t2017-11-25\n16339\t2017-12-02\t2017-11-25\n16339\t2017-12-03\t2017-11-25\n16386\t2017-11-27\t2017-11-27\n16386\t2017-11-28\t2017-11-27\n16386\t2017-11-29\t2017-11-27\n16386\t2017-11-30\t2017-11-27\n16386\t2017-12-02\t2017-11-27\n16386\t2017-12-03\t2017-11-27\n16503\t2017-11-28\t2017-11-28\n16503\t2017-11-29\t2017-11-28\n16503\t2017-11-30\t2017-11-28\n16503\t2017-12-01\t2017-11-28\n16503\t2017-12-02\t2017-11-28\n16503\t2017-12-03\t2017-11-28\n16574\t2017-11-25\t2017-11-25\n16574\t2017-11-26\t2017-11-25\n16574\t2017-12-01\t2017-11-25\n16574\t2017-12-02\t2017-11-25\n16574\t2017-12-03\t2017-11-25\n16861\t2017-11-25\t2017-11-25\n16861\t2017-11-26\t2017-11-25\n16861\t2017-11-27\t2017-11-25\n16861\t2017-11-28\t2017-11-25\n16861\t2017-11-29\t2017-11-25\n16861\t2017-11-30\t2017-11-25\n16861\t2017-12-01\t2017-11-25\n16861\t2017-12-02\t2017-11-25\n16861\t2017-12-03\t2017-11-25\n17420\t2017-11-25\t2017-11-25\n17420\t2017-11-26\t2017-11-25\n17420\t2017-11-27\t2017-11-25\n17420\t2017-11-28\t2017-11-25\n17420\t2017-11-29\t2017-11-25\n17420\t2017-11-30\t2017-11-25\n17420\t2017-12-01\t2017-11-25\n17420\t2017-12-02\t2017-11-25\n17420\t2017-12-03\t2017-11-25\n17679\t2017-11-25\t2017-11-25\n17679\t2017-11-26\t2017-11-25\n17679\t2017-11-27\t2017-11-25\n17679\t2017-11-28\t2017-11-25\n17679\t2017-11-29\t2017-11-25\n17679\t2017-11-30\t2017-11-25\n17679\t2017-12-01\t2017-11-25\n17679\t2017-12-02\t2017-11-25\n17679\t2017-12-03\t2017-11-25\n18024\t2017-11-25\t2017-11-25\n18024\t2017-11-27\t2017-11-25\n18024\t2017-11-28\t2017-11-25\n18024\t2017-11-29\t2017-11-25\n18024\t2017-11-30\t2017-11-25\n18024\t2017-12-01\t2017-11-25\n18024\t2017-12-02\t2017-11-25\n18024\t2017-12-03\t2017-11-25\n18051\t2017-11-25\t2017-11-25\n18051\t2017-11-26\t2017-11-25\n18051\t2017-11-27\t2017-11-25\n18051\t2017-11-28\t2017-11-25\n18051\t2017-11-29\t2017-11-25\n18051\t2017-11-30\t2017-11-25\n18051\t2017-12-02\t2017-11-25\n18051\t2017-12-03\t2017-11-25\n18498\t2017-11-25\t2017-11-25\n18498\t2017-11-26\t2017-11-25\n18498\t2017-11-27\t2017-11-25\n18498\t2017-11-28\t2017-11-25\n18498\t2017-11-29\t2017-11-25\n18498\t2017-11-30\t2017-11-25\n18498\t2017-12-01\t2017-11-25\n18498\t2017-12-02\t2017-11-25\n18498\t2017-12-03\t2017-11-25\n18654\t2017-11-25\t2017-11-25\n18654\t2017-11-26\t2017-11-25\n18654\t2017-11-27\t2017-11-25\n18654\t2017-11-28\t2017-11-25\n18654\t2017-11-29\t2017-11-25\n18654\t2017-11-30\t2017-11-25\n18654\t2017-12-01\t2017-11-25\n18654\t2017-12-02\t2017-11-25\n18654\t2017-12-03\t2017-11-25\n18800\t2017-11-26\t2017-11-26\n18800\t2017-11-27\t2017-11-26\n18800\t2017-11-28\t2017-11-26\n18800\t2017-11-29\t2017-11-26\n18800\t2017-11-30\t2017-11-26\n18800\t2017-12-01\t2017-11-26\n18800\t2017-12-02\t2017-11-26\n18800\t2017-12-03\t2017-11-26\n18866\t2017-11-26\t2017-11-26\n18866\t2017-11-27\t2017-11-26\n18866\t2017-11-28\t2017-11-26\n18866\t2017-11-29\t2017-11-26\n18866\t2017-12-01\t2017-11-26\n18866\t2017-12-02\t2017-11-26\n18866\t2017-12-03\t2017-11-26\n18911\t2017-11-25\t2017-11-25\n18911\t2017-11-26\t2017-11-25\n18911\t2017-11-28\t2017-11-25\n18911\t2017-11-29\t2017-11-25\n18911\t2017-11-30\t2017-11-25\n18911\t2017-12-01\t2017-11-25\n18911\t2017-12-02\t2017-11-25\n18911\t2017-12-03\t2017-11-25\n18944\t2017-11-25\t2017-11-25\n18944\t2017-11-27\t2017-11-25\n18944\t2017-11-28\t2017-11-25\n18944\t2017-11-29\t2017-11-25\n18944\t2017-11-30\t2017-11-25\n18944\t2017-12-02\t2017-11-25\n18944\t2017-12-03\t2017-11-25\n18979\t2017-11-25\t2017-11-25\n18979\t2017-11-26\t2017-11-25\n18979\t2017-11-27\t2017-11-25\n18979\t2017-11-28\t2017-11-25\n18979\t2017-12-01\t2017-11-25\n18979\t2017-12-02\t2017-11-25\n18979\t2017-12-03\t2017-11-25\n19079\t2017-11-27\t2017-11-27\n19079\t2017-11-28\t2017-11-27\n19079\t2017-11-29\t2017-11-27\n19079\t2017-11-30\t2017-11-27\n19079\t2017-12-02\t2017-11-27\n19079\t2017-12-03\t2017-11-27\n19204\t2017-11-25\t2017-11-25\n19204\t2017-11-26\t2017-11-25\n19204\t2017-11-28\t2017-11-25\n19204\t2017-12-01\t2017-11-25\n19204\t2017-12-02\t2017-11-25\n19204\t2017-12-03\t2017-11-25\n19530\t2017-11-26\t2017-11-26\n19530\t2017-11-28\t2017-11-26\n19530\t2017-12-02\t2017-11-26\n19530\t2017-12-03\t2017-11-26\n19553\t2017-11-25\t2017-11-25\n19553\t2017-11-26\t2017-11-25\n19553\t2017-11-27\t2017-11-25\n19553\t2017-11-28\t2017-11-25\n19553\t2017-11-29\t2017-11-25\n19553\t2017-11-30\t2017-11-25\n19553\t2017-12-01\t2017-11-25\n19553\t2017-12-02\t2017-11-25\n19553\t2017-12-03\t2017-11-25\n19984\t2017-11-25\t2017-11-25\n19984\t2017-11-26\t2017-11-25\n19984\t2017-11-27\t2017-11-25\n19984\t2017-11-28\t2017-11-25\n19984\t2017-11-29\t2017-11-25\n19984\t2017-11-30\t2017-11-25\n19984\t2017-12-01\t2017-11-25\n19984\t2017-12-02\t2017-11-25\n19984\t2017-12-03\t2017-11-25\n20135\t2017-11-27\t2017-11-27\n20135\t2017-11-28\t2017-11-27\n20135\t2017-11-29\t2017-11-27\n20135\t2017-11-30\t2017-11-27\n20135\t2017-12-02\t2017-11-27\n20135\t2017-12-03\t2017-11-27\n20382\t2017-11-27\t2017-11-27\n20382\t2017-11-28\t2017-11-27\n20382\t2017-11-30\t2017-11-27\n20382\t2017-12-01\t2017-11-27\n20382\t2017-12-02\t2017-11-27\n20382\t2017-12-03\t2017-11-27\n20497\t2017-11-25\t2017-11-25\n20497\t2017-11-26\t2017-11-25\n20497\t2017-11-27\t2017-11-25\n20497\t2017-11-30\t2017-11-25\n20497\t2017-12-01\t2017-11-25\n20497\t2017-12-02\t2017-11-25\n20497\t2017-12-03\t2017-11-25\n20683\t2017-11-28\t2017-11-28\n20683\t2017-11-29\t2017-11-28\n20683\t2017-12-01\t2017-11-28\n20683\t2017-12-02\t2017-11-28\n20683\t2017-12-03\t2017-11-28\n20735\t2017-11-25\t2017-11-25\n20735\t2017-11-26\t2017-11-25\n20735\t2017-11-28\t2017-11-25\n20735\t2017-11-29\t2017-11-25\n20735\t2017-12-02\t2017-11-25\n20735\t2017-12-03\t2017-11-25\n20924\t2017-11-25\t2017-11-25\n20924\t2017-11-26\t2017-11-25\n20924\t2017-11-29\t2017-11-25\n20924\t2017-11-30\t2017-11-25\n20924\t2017-12-02\t2017-11-25\n20924\t2017-12-03\t2017-11-25\n21220\t2017-11-27\t2017-11-27\n21220\t2017-11-29\t2017-11-27\n21220\t2017-11-30\t2017-11-27\n21220\t2017-12-01\t2017-11-27\n21220\t2017-12-02\t2017-11-27\n21220\t2017-12-03\t2017-11-27\n21700\t2017-11-26\t2017-11-26\n21700\t2017-11-27\t2017-11-26\n21700\t2017-11-30\t2017-11-26\n21700\t2017-12-02\t2017-11-26\n21700\t2017-12-03\t2017-11-26\n22097\t2017-11-25\t2017-11-25\n22097\t2017-11-26\t2017-11-25\n22097\t2017-11-27\t2017-11-25\n22097\t2017-11-28\t2017-11-25\n22097\t2017-11-29\t2017-11-25\n22097\t2017-11-30\t2017-11-25\n22097\t2017-12-02\t2017-11-25\n22097\t2017-12-03\t2017-11-25\n22223\t2017-11-29\t2017-11-29\n22223\t2017-11-30\t2017-11-29\n22223\t2017-12-02\t2017-11-29\n22223\t2017-12-03\t2017-11-29\n22346\t2017-11-26\t2017-11-26\n22346\t2017-11-27\t2017-11-26\n22346\t2017-11-29\t2017-11-26\n22346\t2017-12-02\t2017-11-26\n22346\t2017-12-03\t2017-11-26\n22373\t2017-11-28\t2017-11-28\n22373\t2017-11-29\t2017-11-28\n22373\t2017-12-02\t2017-11-28\n22373\t2017-12-03\t2017-11-28\n22521\t2017-11-26\t2017-11-26\n22521\t2017-11-27\t2017-11-26\n22521\t2017-11-30\t2017-11-26\n22521\t2017-12-02\t2017-11-26\n22521\t2017-12-03\t2017-11-26\n23015\t2017-11-27\t2017-11-27\n23015\t2017-11-29\t2017-11-27\n23015\t2017-12-02\t2017-11-27\n23015\t2017-12-03\t2017-11-27\n23271\t2017-11-25\t2017-11-25\n23271\t2017-11-26\t2017-11-25\n23271\t2017-11-27\t2017-11-25\n23271\t2017-12-01\t2017-11-25\n23271\t2017-12-02\t2017-11-25\n23271\t2017-12-03\t2017-11-25\n23336\t2017-11-25\t2017-11-25\n23336\t2017-11-26\t2017-11-25\n23336\t2017-11-27\t2017-11-25\n23336\t2017-11-28\t2017-11-25\n23336\t2017-12-02\t2017-11-25\n23336\t2017-12-03\t2017-11-25\n23364\t2017-11-26\t2017-11-26\n23364\t2017-11-27\t2017-11-26\n23364\t2017-11-28\t2017-11-26\n23364\t2017-11-29\t2017-11-26\n23364\t2017-11-30\t2017-11-26\n23364\t2017-12-01\t2017-11-26\n23364\t2017-12-02\t2017-11-26\n23364\t2017-12-03\t2017-11-26\n23571\t2017-11-25\t2017-11-25\n23571\t2017-11-26\t2017-11-25\n23571\t2017-11-27\t2017-11-25\n23571\t2017-11-28\t2017-11-25\n23571\t2017-11-29\t2017-11-25\n23571\t2017-11-30\t2017-11-25\n23571\t2017-12-01\t2017-11-25\n23571\t2017-12-02\t2017-11-25\n23571\t2017-12-03\t2017-11-25\n24171\t2017-11-25\t2017-11-25\n24171\t2017-11-26\t2017-11-25\n24171\t2017-11-30\t2017-11-25\n24171\t2017-12-01\t2017-11-25\n24171\t2017-12-02\t2017-11-25\n24171\t2017-12-03\t2017-11-25\n24347\t2017-11-25\t2017-11-25\n24347\t2017-11-26\t2017-11-25\n24347\t2017-11-27\t2017-11-25\n24347\t2017-11-28\t2017-11-25\n24347\t2017-11-29\t2017-11-25\n24347\t2017-11-30\t2017-11-25\n24347\t2017-12-01\t2017-11-25\n24347\t2017-12-02\t2017-11-25\n24347\t2017-12-03\t2017-11-25\n24354\t2017-11-27\t2017-11-27\n24354\t2017-11-30\t2017-11-27\n24354\t2017-12-01\t2017-11-27\n24354\t2017-12-02\t2017-11-27\n24354\t2017-12-03\t2017-11-27\n24663\t2017-11-25\t2017-11-25\n24663\t2017-11-26\t2017-11-25\n24663\t2017-11-27\t2017-11-25\n24663\t2017-11-28\t2017-11-25\n24663\t2017-11-30\t2017-11-25\n24663\t2017-12-02\t2017-11-25\n24663\t2017-12-03\t2017-11-25\n25462\t2017-11-25\t2017-11-25\n25462\t2017-11-26\t2017-11-25\n25462\t2017-11-27\t2017-11-25\n25462\t2017-11-28\t2017-11-25\n25462\t2017-11-29\t2017-11-25\n25462\t2017-11-30\t2017-11-25\n25462\t2017-12-01\t2017-11-25\n25462\t2017-12-02\t2017-11-25\n25462\t2017-12-03\t2017-11-25\n25517\t2017-11-25\t2017-11-25\n25517\t2017-11-26\t2017-11-25\n25517\t2017-11-27\t2017-11-25\n25517\t2017-11-29\t2017-11-25\n25517\t2017-11-30\t2017-11-25\n25517\t2017-12-01\t2017-11-25\n25517\t2017-12-02\t2017-11-25\n25517\t2017-12-03\t2017-11-25\n25591\t2017-11-25\t2017-11-25\n25591\t2017-11-26\t2017-11-25\n25591\t2017-11-27\t2017-11-25\n25591\t2017-12-02\t2017-11-25\n25591\t2017-12-03\t2017-11-25\n26087\t2017-11-26\t2017-11-26\n26087\t2017-11-27\t2017-11-26\n26087\t2017-11-29\t2017-11-26\n26087\t2017-12-01\t2017-11-26\n26087\t2017-12-02\t2017-11-26\n26087\t2017-12-03\t2017-11-26\n26425\t2017-11-28\t2017-11-28\n26425\t2017-11-29\t2017-11-28\n26425\t2017-12-01\t2017-11-28\n26425\t2017-12-02\t2017-11-28\n26425\t2017-12-03\t2017-11-28\n26583\t2017-11-25\t2017-11-25\n26583\t2017-11-26\t2017-11-25\n26583\t2017-11-27\t2017-11-25\n26583\t2017-11-28\t2017-11-25\n26583\t2017-11-29\t2017-11-25\n26583\t2017-11-30\t2017-11-25\n26583\t2017-12-01\t2017-11-25\n26583\t2017-12-02\t2017-11-25\n26583\t2017-12-03\t2017-11-25\n26623\t2017-11-29\t2017-11-29\n26623\t2017-11-30\t2017-11-29\n26623\t2017-12-01\t2017-11-29\n26623\t2017-12-02\t2017-11-29\n26623\t2017-12-03\t2017-11-29\n26706\t2017-11-25\t2017-11-25\n26706\t2017-11-26\t2017-11-25\n26706\t2017-11-27\t2017-11-25\n26706\t2017-11-28\t2017-11-25\n26706\t2017-11-29\t2017-11-25\n26706\t2017-11-30\t2017-11-25\n26706\t2017-12-01\t2017-11-25\n26706\t2017-12-02\t2017-11-25\n26706\t2017-12-03\t2017-11-25\n26708\t2017-11-25\t2017-11-25\n26708\t2017-11-28\t2017-11-25\n26708\t2017-11-29\t2017-11-25\n26708\t2017-12-01\t2017-11-25\n26708\t2017-12-02\t2017-11-25\n26708\t2017-12-03\t2017-11-25\n26755\t2017-11-25\t2017-11-25\n26755\t2017-11-26\t2017-11-25\n26755\t2017-11-27\t2017-11-25\n26755\t2017-11-28\t2017-11-25\n26755\t2017-11-29\t2017-11-25\n26755\t2017-11-30\t2017-11-25\n26755\t2017-12-01\t2017-11-25\n26755\t2017-12-02\t2017-11-25\n26755\t2017-12-03\t2017-11-25\n27484\t2017-11-25\t2017-11-25\n27484\t2017-11-26\t2017-11-25\n27484\t2017-11-27\t2017-11-25\n27484\t2017-11-28\t2017-11-25\n27484\t2017-11-29\t2017-11-25\n27484\t2017-11-30\t2017-11-25\n27484\t2017-12-01\t2017-11-25\n27484\t2017-12-02\t2017-11-25\n27484\t2017-12-03\t2017-11-25\n27760\t2017-11-27\t2017-11-27\n27760\t2017-11-28\t2017-11-27\n27760\t2017-11-29\t2017-11-27\n27760\t2017-12-01\t2017-11-27\n27760\t2017-12-02\t2017-11-27\n27760\t2017-12-03\t2017-11-27\n27974\t2017-11-25\t2017-11-25\n27974\t2017-11-26\t2017-11-25\n27974\t2017-11-27\t2017-11-25\n27974\t2017-11-28\t2017-11-25\n27974\t2017-11-29\t2017-11-25\n27974\t2017-11-30\t2017-11-25\n27974\t2017-12-01\t2017-11-25\n27974\t2017-12-02\t2017-11-25\n27974\t2017-12-03\t2017-11-25\n28024\t2017-11-25\t2017-11-25\n28024\t2017-11-26\t2017-11-25\n28024\t2017-11-27\t2017-11-25\n28024\t2017-11-28\t2017-11-25\n28024\t2017-11-29\t2017-11-25\n28024\t2017-11-30\t2017-11-25\n28024\t2017-12-01\t2017-11-25\n28024\t2017-12-02\t2017-11-25\n28024\t2017-12-03\t2017-11-25\n28088\t2017-11-25\t2017-11-25\n28088\t2017-11-26\t2017-11-25\n28088\t2017-11-27\t2017-11-25\n28088\t2017-11-28\t2017-11-25\n28088\t2017-11-30\t2017-11-25\n28088\t2017-12-01\t2017-11-25\n28088\t2017-12-02\t2017-11-25\n28088\t2017-12-03\t2017-11-25\n28124\t2017-11-30\t2017-11-30\n28124\t2017-12-01\t2017-11-30\n28124\t2017-12-02\t2017-11-30\n28124\t2017-12-03\t2017-11-30\n28146\t2017-11-25\t2017-11-25\n28146\t2017-11-26\t2017-11-25\n28146\t2017-11-27\t2017-11-25\n28146\t2017-11-28\t2017-11-25\n28146\t2017-11-29\t2017-11-25\n28146\t2017-12-01\t2017-11-25\n28146\t2017-12-02\t2017-11-25\n28146\t2017-12-03\t2017-11-25\n28170\t2017-11-25\t2017-11-25\n28170\t2017-11-26\t2017-11-25\n28170\t2017-11-27\t2017-11-25\n28170\t2017-11-28\t2017-11-25\n28170\t2017-11-29\t2017-11-25\n28170\t2017-11-30\t2017-11-25\n28170\t2017-12-02\t2017-11-25\n28170\t2017-12-03\t2017-11-25\n"
+          },
+          {
+            "type": "HTML",
+            "data": "<div class=\"result-alert alert-warning\" role=\"alert\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><strong>Output is truncated</strong> to 1000 rows. Learn more about <strong>zeppelin.spark.maxResult</strong></div>\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n--  获取第一次时间时间和后续使用时间的间隔jg_day\ncreate temp view v_remain_interval as \nselect userid ,date,firstday,datediff(date,firstday) as interval_day\nfrom v_remain_time;\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:12:55+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637841967774_333573500",
+      "id": "paragraph_1637841967774_333573500",
+      "dateCreated": "2021-11-25T20:06:07+0800",
+      "status": "ERROR",
+      "focus": true,
+      "$$hashKey": "object:34905",
+      "dateFinished": "2021-11-25T20:12:55+0800",
+      "dateStarted": "2021-11-25T20:12:55+0800",
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Temporary view 'v_remain_interval' already exists;"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n-- 计算留存日的用户数量 count,sum皆可\ncreate temp view v_cus_quan as\nselect firstday,\n-- count(case WHEN interval_day=0 then 1 end),\nsum(case when interval_day=0 then 1 else 0 end) as day_0,\nsum(case when interval_day=1 then 1 else 0 end) as day_1,\nsum(case when interval_day=2 then 1 else 0 end) as day_2,\nsum(case when interval_day=3 then 1 else 0 end) as day_3,\nsum(case when interval_day=4 then 1 else 0 end) as day_4,\nsum(case when interval_day=5 then 1 else 0 end) as day_5,\nsum(case when interval_day=6 then 1 else 0 end) as day_6,\nsum(case when interval_day=7 then 1 else 0 end) as day_7,\nsum(case when interval_day=8 then 1 else 0 end) as day_8\nfrom v_remain_interval\ngroup by firstday\norder by firstday;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:14:22+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637842334916_859570374",
+      "id": "paragraph_1637842334916_859570374",
+      "dateCreated": "2021-11-25T20:12:14+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:36251",
+      "dateFinished": "2021-11-25T20:14:22+0800",
+      "dateStarted": "2021-11-25T20:14:22+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--计算留存率\nselect firstday,day_0 new_user ,\nconcat(round(day_1/day_0,3)*100,'%') as keep_1,\nconcat(round(day_2/day_0,3)*100,'%') as keep_2,\nconcat(round(day_3/day_0,3)*100,'%') as keep_3,\nconcat(round(day_4/day_0,3)*100,'%') as keep_4,\nconcat(round(day_5/day_0,3)*100,'%') as keep_5,\nconcat(round(day_6/day_0,3)*100,'%') as keep_6,\nconcat(round(day_7/day_0,3)*100,'%') as keep_7,\nconcat(round(day_8/day_0,3)*100,'%') as keep_8\nfrom v_cus_quan;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:28:57+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "firstday": "string",
+                      "new_user": "string",
+                      "keep_1": "string",
+                      "keep_2": "string",
+                      "keep_3": "string",
+                      "keep_4": "string",
+                      "keep_5": "string",
+                      "keep_6": "string",
+                      "keep_7": "string",
+                      "keep_8": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "pieChart": {},
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "firstday",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "new_user",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=80",
+              "$$hashKey": "object:39399"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637842425246_1840950160",
+      "id": "paragraph_1637842425246_1840950160",
+      "dateCreated": "2021-11-25T20:13:45+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:36405",
+      "dateFinished": "2021-11-25T20:17:59+0800",
+      "dateStarted": "2021-11-25T20:15:18+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "firstday\tnew_user\tkeep_1\tkeep_2\tkeep_3\tkeep_4\tkeep_5\tkeep_6\tkeep_7\tkeep_8\n2017-11-25\t706641\t78.9%\t76.8%\t75.9%\t76.1%\t76.6%\t77.3%\t98.6%\t98.3%\n2017-11-26\t158188\t65.4%\t64.60000000000001%\t65.9%\t66.9%\t68.60000000000001%\t97.8%\t97.39999999999999%\t0.0%\n2017-11-27\t63825\t61.5%\t62.4%\t64.4%\t66.3%\t97.2%\t96.7%\t0.0%\t0.0%\n2017-11-28\t31331\t61.8%\t63.7%\t66.4%\t96.8%\t96.2%\t0.0%\t0.0%\t0.0%\n2017-11-29\t17931\t69.8%\t72.0%\t96.6%\t96.0%\t0.0%\t0.0%\t0.0%\t0.0%\n2017-11-30\t9801\t94.6%\t95.8%\t95.3%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\n2017-12-01\t255\t90.2%\t92.9%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\n2017-12-02\t18\t72.2%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\n2017-12-03\t1\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\t0.0%\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--\n--用户购买情况分析，这里主要从用户复购率角度进行分析\n--\n\n\n\n-- 创建复购率视图，每位用户的购买次数\ncreate temp view re_purchase  as \nselect distinct userid,count(behavior) as frequency\nfrom user\nwhere behavior='buy'\ngroup by userid\nhaving count(behavior)>=2\norder by frequency desc;\n-- 计算复购率\nselect \n(select count(1) from re_purchase )/\n(select count(distinct userid) from user where behavior='buy') re_rate;\n\n\n--re_rate为购买率",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:26:13+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "re_rate": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=81",
+              "$$hashKey": "object:38107"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=82",
+              "$$hashKey": "object:38108"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=83",
+              "$$hashKey": "object:38109"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637842518412_1791193270",
+      "id": "paragraph_1637842518412_1791193270",
+      "dateCreated": "2021-11-25T20:15:18+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:36508",
+      "dateFinished": "2021-11-25T20:25:15+0800",
+      "dateStarted": "2021-11-25T20:22:48+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "re_rate\n0.6601061266738449\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\n-- 不同购买次数的人数分布\nselect frequency,count(userid) as user_num\nfrom re_purchase\ngroup by frequency\norder by frequency desc;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:29:34+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "frequency": "string",
+                      "user_num": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "frequency",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "user_num",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=84",
+              "$$hashKey": "object:39718"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637842938224_242686154",
+      "id": "paragraph_1637842938224_242686154",
+      "dateCreated": "2021-11-25T20:22:18+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:37614",
+      "dateFinished": "2021-11-25T20:28:15+0800",
+      "dateStarted": "2021-11-25T20:27:01+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "frequency\tuser_num\n262\t1\n177\t1\n159\t1\n131\t1\n118\t1\n112\t1\n110\t1\n109\t1\n100\t1\n97\t1\n93\t1\n90\t1\n87\t1\n85\t1\n84\t1\n82\t2\n78\t2\n74\t1\n73\t1\n72\t4\n71\t1\n70\t1\n69\t3\n68\t2\n67\t1\n66\t1\n65\t3\n64\t3\n63\t2\n61\t4\n60\t5\n59\t1\n58\t3\n57\t2\n56\t4\n55\t2\n54\t1\n53\t3\n52\t4\n51\t4\n50\t4\n49\t6\n48\t7\n47\t8\n46\t7\n45\t12\n44\t7\n43\t17\n42\t13\n41\t18\n40\t16\n39\t19\n38\t16\n37\t25\n36\t28\n35\t27\n34\t38\n33\t33\n32\t50\n31\t43\n30\t48\n29\t64\n28\t64\n27\t85\n26\t90\n25\t127\n24\t119\n23\t163\n22\t215\n21\t247\n20\t322\n19\t377\n18\t501\n17\t647\n16\t792\n15\t1144\n14\t1441\n13\t2020\n12\t2626\n11\t3727\n10\t5271\n9\t7582\n8\t11222\n7\t16735\n6\t25725\n5\t40411\n4\t63451\n3\t100933\n2\t157240\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--用户行为路径分析，通过假设检验法与对比分析法，从整体用户行为路径转化率，到局部比较不同行为路径下的转化率，分析转化率低的原因\n\n\nselect behavior,count(behavior) as user_active\nfrom user\ngroup by behavior;\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:34:51+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "behavior": "string",
+                      "user_active": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "behavior",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "user_active",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=85",
+              "$$hashKey": "object:40580"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=86",
+              "$$hashKey": "object:40581"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=87",
+              "$$hashKey": "object:40582"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=88",
+              "$$hashKey": "object:40583"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=89",
+              "$$hashKey": "object:40584"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637843210735_1315996462",
+      "id": "paragraph_1637843210735_1315996462",
+      "dateCreated": "2021-11-25T20:26:50+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:38122",
+      "dateFinished": "2021-11-25T20:32:59+0800",
+      "dateStarted": "2021-11-25T20:31:02+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "behavior\tuser_active\nbuy\t2015839\nfav\t2888258\ncart\t5530446\npv\t89660688\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\n\n-- 访客行为转化率\nselect behavior,count(distinct userid) as cus_active\nfrom user\ngroup by behavior;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:38:32+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "behavior": "string",
+                      "cus_active": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=90",
+              "$$hashKey": "object:41023"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=91",
+              "$$hashKey": "object:41024"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=92",
+              "$$hashKey": "object:41025"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=93",
+              "$$hashKey": "object:41026"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=94",
+              "$$hashKey": "object:41027"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637843462185_1689263464",
+      "id": "paragraph_1637843462185_1689263464",
+      "dateCreated": "2021-11-25T20:31:02+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:39732",
+      "dateFinished": "2021-11-25T20:37:55+0800",
+      "dateStarted": "2021-11-25T20:35:57+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "behavior\tcus_active\nbuy\t672404\nfav\t389823\ncart\t738996\npv\t984105\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\n-- 创建视图，统计不同用户不同商品各行为量\ncreate temp view buy_way as\nselect userid,itemid,\nsum(if(behavior='pv',1,0)) as pv,\nsum(if(behavior='fav',1,0)) as fav,\nsum(if(behavior='cart',1,0)) as cart,\nsum(if(behavior='buy',1,0)) as buy\nfrom user\ngroup by userid,itemid;\n\n-- 计算不同路径行为数量\n\n-- 1.pv总行为数\nselect count(*)\nfrom buy_way\nwhere pv>0;\n\n-- 2.pv-loss行为数\nselect count(*) as pv-loss\nfrom buy_way\nwhere pv>0 and cart=0 and fav=0 and buy=0;\n\n-- 3.pv-fav行为数\nselect count(*) as pv-fav\nfrom buy_way\nwhere pv>0 and fav>0 and cart=0;\n\n-- 4.pv-cart行为数\nselect count(*) as pv-cart\nfrom buy_way\nwhere pv>0 and fav=0 and cart>0;\n\n-- 5.pv-buy行为数\nselect count(*) as pv-buy\nfrom buy_way\nwhere pv>0 and buy>0 and fav=0 and cart=0;\n\n-- 6.pv-fav-loss行为数\nselect count(*) as pv-fav-loss\nfrom buy_way\nwhere pv>0 and buy=0 and fav>0 and cart=0;\n\n-- 7.pv-cart-loss行为数\nselect count(*) as pv-cart-loss\nfrom buy_way\nwhere pv>0 and buy=0 and fav=0 and cart>0;\n\n-- 8.pv-fav-buy行为数\nselect count(*) as pv-fav-buy\nfrom buy_way\nwhere pv>0 and buy>0 and fav>0 and cart=0;\n\n-- 9.pv-cart-buy行为数\nselect count(*) as pv-cart-buy\nfrom buy_way\nwhere pv>0 and buy>0 and fav=0 and cart>0;\n\n-- 10.pv-fav&cart-行为数\nselect count(*) as pv-fav&cart\nfrom buy_way\nwhere pv>0 and fav>0 and cart>0;\n\n-- 11.pv-fav&cart-buy行为数\nselect count(*) as pv-fav&cart-buy\nfrom buy_way\nwhere pv>0 and buy>0 and fav>0 and cart>0;\n\n-- 12.pv-fav&cart-loss行为数\nselect count(*) as pv-fav&cart-loss\nfrom buy_way\nwhere pv>0 and cart>0 and fav>0 and buy=0;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:47:45+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "count(1)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637843757387_1039838673",
+      "id": "paragraph_1637843757387_1039838673",
+      "dateCreated": "2021-11-25T20:35:57+0800",
+      "status": "ERROR",
+      "focus": true,
+      "$$hashKey": "object:40629",
+      "dateFinished": "2021-11-25T20:46:27+0800",
+      "dateStarted": "2021-11-25T20:41:31+0800"
+    },
+    {
+      "text": "%spark.sql\n\n--消费偏好分析，了解用户最喜欢的商品，并通过采用假设检验法，分析高销售量商品，卖的好的原因，同时对5.2用户行为路径转化率假设3进行分析验证\n\n-- 计算不同成交次数的商品数量\nselect goods_deal_count,count(itemid) as goods_count\nfrom\n(select itemid,count(behavior) as goods_deal_count\nfrom user\nwhere behavior='buy'\ngroup by itemid) as s\ngroup by goods_deal_count\norder by goods_deal_count;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:56:15+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "goods_deal_count": "string",
+                      "goods_count": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "stacked": false
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "goods_deal_count",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "goods_count",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=96",
+              "$$hashKey": "object:42430"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637844091171_132918348",
+      "id": "paragraph_1637844091171_132918348",
+      "dateCreated": "2021-11-25T20:41:31+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:41062",
+      "dateFinished": "2021-11-25T20:51:53+0800",
+      "dateStarted": "2021-11-25T20:50:23+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "goods_deal_count\tgoods_count\n1\t372076\n2\t107997\n3\t48926\n4\t27384\n5\t17331\n6\t11923\n7\t8625\n8\t6423\n9\t5131\n10\t3930\n11\t3198\n12\t2641\n13\t2200\n14\t1879\n15\t1648\n16\t1470\n17\t1181\n18\t1068\n19\t957\n20\t858\n21\t807\n22\t741\n23\t643\n24\t568\n25\t536\n26\t500\n27\t438\n28\t405\n29\t367\n30\t364\n31\t334\n32\t298\n33\t287\n34\t220\n35\t218\n36\t228\n37\t219\n38\t227\n39\t180\n40\t170\n41\t160\n42\t163\n43\t126\n44\t157\n45\t145\n46\t115\n47\t132\n48\t121\n49\t98\n50\t96\n51\t107\n52\t93\n53\t99\n54\t91\n55\t85\n56\t61\n57\t76\n58\t72\n59\t69\n60\t53\n61\t61\n62\t65\n63\t58\n64\t48\n65\t62\n66\t56\n67\t52\n68\t51\n69\t36\n70\t42\n71\t49\n72\t56\n73\t27\n74\t34\n75\t26\n76\t35\n77\t31\n78\t27\n79\t31\n80\t36\n81\t32\n82\t20\n83\t38\n84\t36\n85\t30\n86\t32\n87\t21\n88\t26\n89\t23\n90\t24\n91\t23\n92\t22\n93\t18\n94\t31\n95\t25\n96\t18\n97\t22\n98\t21\n99\t18\n100\t11\n101\t12\n102\t13\n103\t17\n104\t17\n105\t14\n106\t18\n107\t11\n108\t15\n109\t11\n110\t11\n111\t17\n112\t20\n113\t13\n114\t9\n115\t10\n116\t15\n117\t14\n118\t13\n119\t9\n120\t14\n121\t6\n122\t11\n123\t7\n124\t16\n125\t12\n126\t10\n127\t12\n128\t5\n129\t9\n130\t8\n131\t12\n132\t8\n133\t5\n134\t4\n135\t8\n136\t7\n137\t8\n138\t7\n139\t17\n140\t10\n141\t6\n142\t2\n143\t3\n144\t5\n145\t7\n146\t7\n147\t9\n148\t5\n149\t3\n150\t4\n151\t5\n152\t5\n153\t4\n154\t3\n155\t6\n156\t3\n157\t5\n158\t12\n159\t3\n160\t4\n161\t4\n162\t9\n163\t2\n164\t6\n165\t4\n166\t4\n167\t6\n168\t3\n169\t4\n170\t3\n171\t1\n172\t3\n174\t1\n175\t5\n176\t3\n177\t1\n178\t1\n179\t1\n180\t6\n181\t6\n182\t4\n183\t4\n184\t5\n185\t2\n186\t1\n187\t3\n188\t5\n189\t1\n190\t3\n191\t4\n192\t1\n193\t4\n195\t3\n196\t2\n197\t3\n198\t4\n199\t2\n200\t4\n201\t5\n202\t3\n203\t2\n204\t3\n205\t4\n206\t1\n207\t2\n209\t1\n210\t1\n211\t1\n212\t1\n213\t4\n214\t3\n215\t1\n216\t2\n217\t3\n218\t4\n220\t3\n221\t2\n222\t1\n223\t4\n224\t1\n225\t1\n226\t5\n228\t3\n229\t1\n230\t3\n231\t1\n233\t1\n235\t3\n236\t2\n237\t3\n238\t1\n239\t1\n240\t1\n241\t4\n243\t1\n244\t3\n246\t2\n250\t1\n251\t1\n253\t1\n255\t2\n256\t1\n257\t1\n258\t1\n259\t1\n260\t3\n263\t2\n264\t1\n265\t3\n268\t1\n269\t1\n270\t2\n272\t1\n274\t3\n275\t2\n280\t1\n281\t1\n282\t3\n283\t1\n284\t1\n285\t1\n286\t1\n287\t2\n288\t2\n292\t1\n294\t2\n298\t1\n301\t2\n307\t2\n309\t1\n311\t2\n316\t2\n319\t1\n320\t1\n321\t1\n322\t1\n323\t1\n324\t3\n328\t2\n330\t1\n332\t1\n335\t1\n337\t1\n348\t2\n349\t1\n351\t1\n354\t1\n356\t1\n359\t1\n360\t1\n363\t1\n372\t2\n376\t1\n384\t1\n391\t1\n394\t1\n402\t1\n404\t1\n441\t1\n442\t1\n453\t1\n465\t1\n481\t1\n488\t1\n493\t1\n497\t1\n512\t1\n548\t1\n560\t1\n629\t1\n665\t1\n675\t1\n950\t1\n1408\t1\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--高销售量商品（即用户最喜欢的商品)\n\n\n-- 筛选销售量前10的商品\nselect itemid,\nsum(if(behavior='buy',1,0)) as goods_deal_count,\nsum(if(behavior='pv',1,0)) as goods_pv_count,\nsum(if(behavior='fav',1,0)) as goods_fav_count,\nsum(if(behavior='cart',1,0)) as goods_buy_count,\nround(sum(if(behavior='buy',1,0))/sum(if(behavior='pv',1,0)),3)*100 as goods_click_rate\nfrom user\ngroup by itemid\norder by goods_deal_count desc\nlimit 10\n\n\n--对比购买量前10的商品，高流量的商品中只有3031354这个商品是在销售量前10范围内的，说明流量可能并不是影响用户下单的最主要的因素，假设1不成立\n\n--另一方面，也验证了5.2用户行为路径转化率低假设3，说明淘宝推荐的商品不是用户最喜欢的，所以转化率不高。所以平台可以优化商品推荐系统，优化用户搜索商品的推荐算法，提升用户转化率\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T20:59:37+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "itemid": "string",
+                      "goods_deal_count": "string",
+                      "goods_pv_count": "string",
+                      "goods_fav_count": "string",
+                      "goods_buy_count": "string",
+                      "goods_click_rate": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "itemid",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "goods_deal_count",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=97",
+              "$$hashKey": "object:43186"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637844493880_1266019662",
+      "id": "paragraph_1637844493880_1266019662",
+      "dateCreated": "2021-11-25T20:48:14+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:41507",
+      "dateFinished": "2021-11-25T20:57:48+0800",
+      "dateStarted": "2021-11-25T20:55:00+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "itemid\tgoods_deal_count\tgoods_pv_count\tgoods_fav_count\tgoods_buy_count\tgoods_click_rate\n3122135\t1408\t1779\t152\t342\t79.10000000000001\n3031354\t950\t17169\t513\t1761\t5.5\n3964583\t675\t5018\t156\t572\t13.5\n2560262\t665\t10388\t309\t1271\t6.4\n2964774\t629\t6579\t134\t719\t9.6\n740947\t560\t7738\t474\t811\t7.199999999999999\n1910706\t548\t1645\t52\t165\t33.300000000000004\n1116492\t512\t898\t47\t163\t56.99999999999999\n705557\t497\t9308\t185\t877\t5.3\n4443059\t493\t14082\t334\t951\t3.5000000000000004\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\nselect itemid,\nsum(if(behavior='buy',1,0)) as goods_deal_count,\nsum(if(behavior='pv',1,0)) as goods_click_count,\nsum(if(behavior='fav',1,0)) as goods_fav_count,\nsum(if(behavior='cart',1,0)) as goods_cart_count,\nround(sum(if(behavior='buy',1,0))/sum(if(behavior='pv',1,0)),3)*100 as goods_click_rate\nfrom user\ngroup by itemid\norder by goods_fav_count desc\nlimit 10",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:04:45+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "itemid": "string",
+                      "goods_deal_count": "string",
+                      "goods_click_count": "string",
+                      "goods_fav_count": "string",
+                      "goods_cart_count": "string",
+                      "goods_click_rate": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=98",
+              "$$hashKey": "object:44204"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637844900619_1305467261",
+      "id": "paragraph_1637844900619_1305467261",
+      "dateCreated": "2021-11-25T20:55:00+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:42298",
+      "dateFinished": "2021-11-25T21:04:43+0800",
+      "dateStarted": "2021-11-25T21:01:55+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "itemid\tgoods_deal_count\tgoods_click_count\tgoods_fav_count\tgoods_cart_count\tgoods_click_rate\n2279428\t124\t14257\t971\t981\t0.8999999999999999\n812879\t136\t30079\t875\t1528\t0.5\n2331370\t163\t19482\t873\t1513\t0.8\n2818406\t95\t15980\t822\t1415\t0.6\n3330337\t56\t10048\t710\t693\t0.6\n3845720\t105\t25650\t702\t851\t0.4\n1535294\t402\t17840\t675\t1114\t2.3\n138964\t95\t21103\t642\t1133\t0.5\n2453685\t197\t14569\t636\t1053\t1.4000000000000001\n2364679\t79\t11710\t621\t761\t0.7000000000000001\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--用户价值分析，根据RFM模型对用户进行价值分类\n--R（Recency）：根据用户最近一次购买的时间到2017年12月3日的时间差值，来判断用户的最近一次消费时间间隔F（Frequency）：将数据集中用户从2017年11月25日到12月3日的消费次数来作为频率\n--F（Frequency）：将数据集中用户从2017年11月25日到12月3日的消费次数来作为频率\n\n--R值  F值\n-- 高  高  重要价值客户\n-- 高  低  重要深耕客户\n-- 低  高  重要挽回客户\n-- 低  低  重要挽留用户\n\n\n--分数   R    F\n-- 1    >7    1-2\n-- 2    6-7   3-4\n-- 3    4-5   5-6\n-- 4    2-3   7-8\n-- 5    1     >9\n\n\n\n-- 不同购买次数的人数分布\nWITH buy_quan as\n(SELECT\n    `user`.`userid` AS `userid`,\n    count( `user`.`behavior` ) AS `frequency` \nFROM\n    `user` \nWHERE\n    ( `user`.`behavior` = 'buy' ) \nGROUP BY\n    `user`.`userid` \nORDER BY\n    `frequency` DESC)\nSELECT frequency buy_count,count(userid) pp_number from buy_quan\nGROUP BY frequency;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:14:29+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "buy_count": "string",
+                      "pp_number": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "buy_count",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "pp_number",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=99",
+              "$$hashKey": "object:45141"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=100",
+              "$$hashKey": "object:45142"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=101",
+              "$$hashKey": "object:45143"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=102",
+              "$$hashKey": "object:45144"
+            },
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=103",
+              "$$hashKey": "object:45145"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637845315808_1460172829",
+      "id": "paragraph_1637845315808_1460172829",
+      "dateCreated": "2021-11-25T21:01:55+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:43207",
+      "dateFinished": "2021-11-25T21:09:57+0800",
+      "dateStarted": "2021-11-25T21:08:35+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "buy_count\tpp_number\n29\t64\n26\t90\n65\t3\n19\t377\n54\t1\n112\t1\n22\t215\n7\t16735\n34\t38\n262\t1\n50\t4\n110\t1\n57\t2\n32\t50\n43\t17\n84\t1\n31\t43\n39\t19\n25\t127\n71\t1\n6\t25725\n68\t2\n72\t4\n87\t1\n58\t3\n9\t7582\n27\t85\n63\t2\n51\t4\n56\t4\n52\t4\n17\t647\n41\t18\n28\t64\n33\t33\n5\t40411\n1\t228546\n10\t5271\n85\t1\n177\t1\n48\t7\n67\t1\n100\t1\n131\t1\n44\t7\n61\t4\n3\t100933\n37\t25\n12\t2626\n55\t2\n74\t1\n8\t11222\n11\t3727\n49\t6\n35\t27\n2\t157240\n66\t1\n4\t63451\n118\t1\n13\t2020\n36\t28\n78\t2\n18\t501\n69\t3\n14\t1441\n21\t247\n59\t1\n15\t1144\n38\t16\n82\t2\n97\t1\n42\t13\n73\t1\n30\t48\n159\t1\n90\t1\n23\t163\n46\t7\n20\t322\n70\t1\n109\t1\n60\t5\n93\t1\n40\t16\n16\t792\n64\t3\n45\t12\n47\t8\n53\t3\n24\t119\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n\n-- 创建视图，存放last_buy_time\n\ndrop view r_dates;\n\ncreate temp view r_dates as\nselect userid,max(date) as last_buy_time\nfrom user\nwhere behavior='buy'\ngroup by userid;\n\n-- 计算每个用户的R值\ncreate temp view R_value as\nselect userid,last_buy_time,datediff('2017-12-03',last_buy_time) as bt_days,\n(case\nwhen datediff('2017-12-03',last_buy_time)=1 then 5\nwhen datediff('2017-12-03',last_buy_time)<=3 then 4\nwhen datediff('2017-12-03',last_buy_time)<=5 then 3\nwhen datediff('2017-12-03',last_buy_time)<=7 then 2\nelse 1 end) as R_score\nfrom r_dates;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:18:12+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637845715534_2027272186",
+      "id": "paragraph_1637845715534_2027272186",
+      "dateCreated": "2021-11-25T21:08:35+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:44215",
+      "dateFinished": "2021-11-25T21:18:12+0800",
+      "dateStarted": "2021-11-25T21:18:12+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--计算每个用户的R值\n\n-- 创建视图，存放用户消费频次\ncreate temp view f_rate as\nselect userid,count(behavior) as buy_count\nfrom user\nwhere behavior ='buy' \ngroup by userid\norder by buy_count desc;\n\n-- 计算每个用户的F值\ncreate temp view F_value as\nselect userid,buy_count,\n(case when buy_count<=2 then 1\nwhen buy_count between 3 and 4 then 2\nwhen buy_count between 5 and 6 then 3\nwhen buy_count between 7 and 8 then 4\nelse 5 end) as F_score\nfrom f_rate;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:20:54+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637846212976_1411543578",
+      "id": "paragraph_1637846212976_1411543578",
+      "dateCreated": "2021-11-25T21:16:53+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:45162",
+      "dateFinished": "2021-11-25T21:20:54+0800",
+      "dateStarted": "2021-11-25T21:20:54+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    },
+    {
+      "text": "%spark.sql\n\n-- 1.计算R的平均值\nselect avg(R_score) from R_value;\n-- 求得R平均值3.675400503268868",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:24:08+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "avg(R_score)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=104",
+              "$$hashKey": "object:45913"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637846400044_665794865",
+      "id": "paragraph_1637846400044_665794865",
+      "dateCreated": "2021-11-25T21:20:00+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:45350",
+      "dateFinished": "2021-11-25T21:23:37+0800",
+      "dateStarted": "2021-11-25T21:21:58+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "avg(R_score)\n3.675400503268868\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n-- 2.计算F的平均值\nselect avg(F_score) from F_value; -- 求得F平均值1.7338\n--1.733325500740626\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:30:34+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "avg(F_score)": "string"
+                    },
+                    "updated": true
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=105",
+              "$$hashKey": "object:46172"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637846518848_2116380625",
+      "id": "paragraph_1637846518848_2116380625",
+      "dateCreated": "2021-11-25T21:21:58+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:45493",
+      "dateFinished": "2021-11-25T21:25:59+0800",
+      "dateStarted": "2021-11-25T21:24:38+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "avg(F_score)\n1.733325500740626\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--用户价值分类\n\ncreate temp view RFM_class as\nselect R_value.*,F_value.buy_count,F_value.F_score,\n(case when R_value.R_score>3.675 and F_value.F_score>1.733 then 'high_value_user'\nwhen R_value.R_score>3.675 and F_value.F_score<1.733 then 'deep_user'\nwhen R_value.R_score<3.675 and F_value.F_score>1.733 then 'recall_user'\nwhen R_value.R_score<3.675 and F_value.F_score<1.733 then 'tostay_user'\nend) as user_class\nfrom R_value,F_value\nwhere R_value.userid=F_value.userid;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:32:42+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637846678631_1465513099",
+      "id": "paragraph_1637846678631_1465513099",
+      "dateCreated": "2021-11-25T21:24:38+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:45922",
+      "dateFinished": "2021-11-25T21:32:42+0800",
+      "dateStarted": "2021-11-25T21:32:42+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    },
+    {
+      "text": "%spark.sql\n\n--分类汇总不同类型用户，并了解各类占比情况\n\nselect user_class,count(*)\nfrom RFM_class\ngroup by user_class\norder by count(*) desc;",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:36:24+0800",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "user_class": "string",
+                      "count(1)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://hadoop104:4040/jobs/job?id=106",
+              "$$hashKey": "object:46868"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637847091696_1074339312",
+      "id": "paragraph_1637847091696_1074339312",
+      "dateCreated": "2021-11-25T21:31:31+0800",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:46190",
+      "dateFinished": "2021-11-25T21:36:17+0800",
+      "dateStarted": "2021-11-25T21:33:21+0800",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "user_class\tcount(1)\nhigh_value_user\t237653\ndeep_user\t220582\ntostay_user\t165204\nrecall_user\t48965\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-11-25T21:33:21+0800",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1637847201662_2139526912",
+      "id": "paragraph_1637847201662_2139526912",
+      "dateCreated": "2021-11-25T21:33:21+0800",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:46321"
+    }
+  ],
+  "name": "SparkTest1",
+  "id": "2GME84X45",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/SparkTest1"
+}
