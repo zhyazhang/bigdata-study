@@ -2,6 +2,8 @@ package com.aifurion.utils
 
 import scala.util.matching.Regex
 
+
+
 object RegexUtil {
 
     val pattern: Regex = "^\\d+".r
@@ -11,6 +13,11 @@ object RegexUtil {
     def findStartNumber(str: String): String = {
         val number: Option[String] = pattern.findFirstIn(str)
         if (number.isEmpty) "" else number.get
+    }
+
+
+    def main(args: Array[String]): Unit = {
+
     }
 
 }

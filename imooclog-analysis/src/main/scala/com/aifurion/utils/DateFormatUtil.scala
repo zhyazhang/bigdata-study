@@ -4,6 +4,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+/**
+ * @author zzy
+ * 日期格式化工具类
+ *
+ */
 object DateFormatUtil {
 
     //使用java8线程安全类DateTimeFormatter做时间格式化

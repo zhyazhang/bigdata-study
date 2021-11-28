@@ -105,11 +105,10 @@ object SparkDataCleaning {
         parsedDF.coalesce(1).
                 write.
                 partitionBy("day").
-                parquet(properties.getProperty("file.protocol")+
+                parquet(properties.getProperty("file.protocol") +
                         properties.getProperty("file.dataCleaned.path"))
 
     }
-
 
 
     //对日志进行格式化，获得ip的城市，以及访问的具体行为
@@ -142,11 +141,7 @@ object SparkDataCleaning {
                 if (cmsTypeId.length > 1) {
                     cmsType = cmsTypeId(0)
                     cmsType match {
-                        case "video" | "code" | "learn" =>
-                            val pattern: Regex = """(^[0-9]+)""".r
-                            cmsId = pattern.findFirstIn(cmsTypeId(1)).get.toLong
-
-                        case "article" =>
+                        case "video" | "code" | "learn" | "article" =>
                             val number: String = RegexUtil.findStartNumber(cmsTypeId(1))
                             if (StringUtils.isNotEmpty(number)) {
                                 cmsId = number.toLong
