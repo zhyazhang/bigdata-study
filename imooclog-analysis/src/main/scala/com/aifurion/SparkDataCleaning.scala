@@ -1,17 +1,35 @@
 package com.aifurion
 
+import com.aifurion.entity.BrowseFormatInfo
 import com.aifurion.utils.ip.IpHelper
 import com.aifurion.utils.{DateFormatUtil, PropertiesUtil, RegexUtil}
 import org.apache.commons.lang3.StringUtils
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.types.{LongType, StringType, StructField, StructType}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 import java.util.Properties
+import scala.util.matching.Regex
 
 
 object SparkDataCleaning {
 
     private val properties: Properties = PropertiesUtil.getProperties
+
+
+    private val struct: StructType = StructType(
+        Array(
+            StructField("url", StringType),
+            StructField("cmsType", StringType),
+            StructField("cmsId", LongType),
+            StructField("flow", LongType),
+            StructField("ip", StringType),
+            StructField("city", StringType),
+            StructField("time", StringType),
+            StructField("day", StringType)
+        )
+    )
+
 
     def main(args: Array[String]): Unit = {
 
@@ -78,30 +96,42 @@ object SparkDataCleaning {
                 //过滤掉url为-等不规范的情况
                 filter(item => !"-".equals(item(1)) && item(1).length > 10)
 
-        formatRdd.map(line => parseLog(line)).take(10).foreach(println)
+        val parsedRdd: RDD[Row] = formatRdd.map(line => parseLog(line))
+
+        val parsedDF: DataFrame = spark.createDataFrame(parsedRdd, struct)
+
+
+        //将清洗后的dataframe保存为parquet文件
+        parsedDF.coalesce(1).
+                write.
+                partitionBy("day").
+                parquet(properties.getProperty("file.protocol")+
+                        properties.getProperty("file.dataCleaned.path"))
 
     }
 
 
+
+    //对日志进行格式化，获得ip的城市，以及访问的具体行为
     def parseLog(log: List[String]): Row = {
 
 
         try {
 
-            val day: String = log.head.substring(0, 9)
-            val time: String = log.head.substring(11, 18)
+            val day: String = log.head.substring(0, 10)
+            val time: String = log.head.substring(11, 19)
 
 
             val url: String = log(1)
-            val flow: String = log(2)
+            val flow: Long = log(2).toLong
             val ip: String = log(3)
 
             val city: String = IpHelper.findRegionByIp(ip)
 
             //http://www.imooc.com/code/547   ===>  code/547  547
 
-            var cmsType = ""
-            var cmsId = 0L
+            var cmsType: String = ""
+            var cmsId: Long = 0L
 
             val domain = "http://www.imooc.com/"
             val domainIndex: Int = url.indexOf(domain)
@@ -112,12 +142,16 @@ object SparkDataCleaning {
                 if (cmsTypeId.length > 1) {
                     cmsType = cmsTypeId(0)
                     cmsType match {
-                        case "video" | "code" | "learn" => cmsId = cmsTypeId(1).split("\\?")(0).toLong
+                        case "video" | "code" | "learn" =>
+                            val pattern: Regex = """(^[0-9]+)""".r
+                            cmsId = pattern.findFirstIn(cmsTypeId(1)).get.toLong
+
                         case "article" =>
                             val number: String = RegexUtil.findStartNumber(cmsTypeId(1))
                             if (StringUtils.isNotEmpty(number)) {
                                 cmsId = number.toLong
                             }
+
                         case _ =>
                     }
                 }
@@ -126,10 +160,9 @@ object SparkDataCleaning {
         } catch {
             case e: Exception =>
                 //e.printStackTrace()
-                //println("------------log----------------------")
-                //println(log)
+                println("------------log----------------------")
+                println(log)
                 Row(0)
-
         }
 
 
