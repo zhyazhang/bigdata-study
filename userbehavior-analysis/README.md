@@ -1,8 +1,10 @@
-# User Behavior Data from Taobao for Recommendation
+## 1 项目介绍
 
 
 
-集器环境：
+:seedling: 集器环境：
+
+三台Vmware centos7组成的hadoop集群，spark运行模式为yarn client，代码执行在zeppelin端
 
 hadoop 3.2.0
 
@@ -12,15 +14,11 @@ spark 3.0.0
 
 zeppelin 0.10.0
 
-三台Vmware centos7组成的hadoop集群，spark运行模式为yarn client，代码执行在zeppelin端，并使用其作为可视化工具
 
 
+## 2 数据处理
 
-
-
-## 1 数据处理
-
-### 1.1 数据来源
+### 2.1 数据来源
 
 数据来自阿里天池：[User Behavior Data from Taobao](https://tianchi.aliyun.com/dataset/dataDetail?dataId=649)，数据集包含了2017年11月25日至2017年12月3日之间，有行为的约一百万随机用户的所有行为（行为包括点击、购买、加购、喜欢）。数据集的每一行表示一条用户行为，由用户ID、商品ID、商品类目ID、行为类型和时间戳组成，并以逗号分隔。
 
@@ -53,7 +51,7 @@ zeppelin 0.10.0
 
 
 
-### 1.2 数据清洗
+### 2.2 数据清洗
 
 ```scala
 //加载数据
@@ -83,9 +81,6 @@ println(data.describe())
 
 >可以看出，数据没有缺失值
 >
->
-
-
 
 ```scala
 //添加日期、小时列
@@ -101,13 +96,13 @@ datadf.createOrReplaceTempView("user")
 
 
 
-## 2 构建模型与数据分析
+## 3 构建模型与数据分析
 
-### 2.1 用户活跃度分析
+### 3.1 用户活跃度分析
 
 主要根据流量指标：流量PV、访客数UV、人均浏览量PV/UV来对用户活跃情况进行量化分析，分别从整体到局部进行分析，找出用户活跃规律
 
-#### 2.1.1 整体流量情况
+#### 3.1.1 整体流量情况
 
 ```sql
 %spark.sql
@@ -131,7 +126,7 @@ from user;
 
 
 
-#### 2.1.2 每日浏览量
+#### 3.1.2 每日浏览量
 
 ```sql
 %spark.sql
@@ -183,7 +178,7 @@ FROM  T2
 
 >图表展示可以发现，浏览量PV和访客数UV的变化总体趋势是相同的，工作日比较平稳，周末会有小幅上升
 
-#### 2.1.3 每时刻流量情况
+#### 3.1.3 每时刻流量情况
 
 ```sql
 %spark.sql
@@ -205,7 +200,7 @@ group by hour;
 
 
 
-### 2.2 用户留存分析
+### 3.2 用户留存分析
 
 >主要采用群组分析法
 >
@@ -289,9 +284,9 @@ from v_cus_quan;
 
 
 
-### 2.3 用户购买情况分析
+### 3.3 用户购买情况分析
 
-#### 2.3.1 复购率
+#### 3.3.1 复购率
 
 >主要从用户复购率角度进行分析
 
@@ -316,7 +311,7 @@ select
 >
 >用户质量挺高
 
-#### 2.3.2 复购次数频数
+#### 3.3.2 复购次数频数
 
 ```sql
 %spark.sql
@@ -326,6 +321,50 @@ from re_purchase
 group by frequency
 order by frequency desc;
 ```
+
+![image-20211129130654998](images/image-20211129130654998.png)
+
+>在11月25日-12月3日的9天时间内，大部分的客户复购次数在2-10次之间，占比高达96.56%，购买100次以上的有9人，甚至有人复购262次
+
+### 3.4 用户行为分析
+
+>从整体用户行为路径转化率，到局部比较不同行为路径下的转化率，分析转化率低的原因
+
+```sql
+%spark.sql
+
+select behavior,count(behavior) as user_active
+from user
+group by behavior;
+```
+
+![image-20211129134509471](images/image-20211129134509471.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
