@@ -2,17 +2,21 @@
 
 
 
-:seedling: 集器环境：
+:seedling: 环境说明：
 
 三台Vmware centos7组成的hadoop集群，spark运行模式为yarn client，代码执行在zeppelin端
 
-hadoop 3.2.0
+- hadoop 3.2.0
 
-zookeeper 3.6.3
 
-spark 3.0.0
+- zookeeper 3.6.3
 
-zeppelin 0.10.0
+
+- spark 3.0.0
+
+
+- zeppelin 0.10.0
+
 
 
 

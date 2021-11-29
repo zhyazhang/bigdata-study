@@ -29,7 +29,8 @@ object SparkDataAnalysis {
                         properties.getProperty("file.dataCleaned.path"))
 
         //数据缓存
-        parsedDF.cache()
+
+        parsedDF.show(10, truncate = false)
 
 
         val day: String = "2016-11-11"
@@ -51,7 +52,7 @@ object SparkDataAnalysis {
         //analysisVideoFLowPopularity(spark, df, day, topN)
 
 
-        analysisArticlePopularity(spark, df, day, topN)
+        //analysisArticlePopularity(spark, df, day, topN)
 
         //analysisIp(spark, df, day, topN)
 
@@ -213,6 +214,8 @@ object SparkDataAnalysis {
         val videoPopTopN: Dataset[Row] = videoPopDF.
                 withColumn("top-n", row_number().over(window)).
                 where($"top-n" <= topN)
+
+        videoPopTopN.show()
 
         //统计结果写入到mysql
 
