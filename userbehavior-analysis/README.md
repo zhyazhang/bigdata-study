@@ -1,3 +1,5 @@
+<img src="../images/spark-logo.png" alt="Apache Spark"/>
+
 ## 1 项目介绍
 
 
@@ -144,7 +146,7 @@ group by `date`
 order by `date`;
 ```
 
-![image-20211128203627590](images/image-20211128203627590.png)
+![image-20211128203627590](../images/image-20211128203627590.png)
 
 环比数据
 
@@ -176,7 +178,7 @@ FROM  T2
 
 ```
 
-![image-20211128204133061](images/image-20211128204133061.png)
+![image-20211128204133061](../images/image-20211128204133061.png)
 
 
 
@@ -196,7 +198,7 @@ from user
 group by hour;
 ```
 
-![image-20211128205059325](images/image-20211128205059325.png)
+![image-20211128205059325](../images/image-20211128205059325.png)
 
 
 
@@ -326,7 +328,7 @@ group by frequency
 order by frequency desc;
 ```
 
-![image-20211129130654998](images/image-20211129130654998.png)
+![image-20211129130654998](../images/image-20211129130654998.png)
 
 >在11月25日-12月3日的9天时间内，大部分的客户复购次数在2-10次之间，占比高达96.56%，购买100次以上的有9人，甚至有人复购262次
 
@@ -342,59 +344,7 @@ from user
 group by behavior;
 ```
 
-![image-20211129134509471](images/image-20211129134509471.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![image-20211129134509471](../images/image-20211129134509471.png)
 
 
 
