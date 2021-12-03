@@ -75,7 +75,6 @@ public class HotItemsAnalysis {
 
         //5、收集同一窗口的所有商品count数据，排序输出top n
 
-
         //获得侧输出流
         //windowAggStream.getSideOutput(lateTag).print("late");
 
