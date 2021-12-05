@@ -22,7 +22,8 @@ public class LoggerCollectController {
     @PostMapping("/savelog")
     public String saveLog(@RequestBody String logString) {
 
-        LOGGER.info(logString);
+        //LOGGER.info(logString);
+        System.out.println(logString);
 
         return "success";
 
