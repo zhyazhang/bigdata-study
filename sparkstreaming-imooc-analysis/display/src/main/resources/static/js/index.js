@@ -27,7 +27,7 @@
         // x轴相关配置
         xAxis: [{
             type: 'category',
-            data: ["旅游行业", "教育培训", "游戏行业", "医疗行业", "电商行业", "社交行业", "金融行业"],
+            data: ["1", "2", "3", "4", "5", "6", "7"],
             axisTick: {
                 alignWithLabel: true
             },
@@ -78,6 +78,60 @@
     };
     // 3.把配置项给实例对象
     myChart.setOption(option);
+
+
+    //获取数据
+    function getData() {
+        $.ajax({
+            url: "/getVideoClick",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.code === 0) {
+                    var res = data.data;
+                    var videoId = [];
+                    var clickValue = [];
+
+                    //获取到各个省份的数据
+                    for (var i = 0; i < res.length; i++) {
+                        videoId.push(res[i].videoId)
+                        clickValue.push(res[i].clickCount)
+                    }
+
+                    //使用指定的配置项和数据显示图表
+                    myChart.setOption({
+                        xAxis: [{
+                            data: videoId,
+
+                        }],
+
+                        series: [
+                            {
+                                name: '浏览量',
+                                type: 'bar',
+                                barWidth: '35%',
+                                // ajax传动态数据
+                                data: clickValue,
+                                itemStyle: {
+                                    // 修改柱子圆角
+                                    barBorderRadius: 5
+                                }
+                            }
+                        ]
+                    });
+                }
+            }
+        })
+    }
+
+    getData();
+
+    window.setInterval(function () {
+
+        getData();
+
+    }, 1000)
+
 
     // 4.让图表随屏幕自适应
     window.addEventListener('resize', function () {

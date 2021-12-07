@@ -2,7 +2,7 @@ package com.aifurion.display.beans;
 
 /**
  * @author ：zzy
- * @description：TODO
+ * @description：TODO 省浏览量实体类
  * @date ：2021/12/7 9:28
  */
 public class ProvinceView {

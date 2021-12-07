@@ -1,6 +1,7 @@
 package com.aifurion.display.controller;
 
 import com.aifurion.display.beans.ProvinceView;
+import com.aifurion.display.beans.VideoClicks;
 import com.aifurion.display.common.ApiResponse;
 import com.aifurion.display.service.LoadDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,14 @@ public class LoadDataController {
     public ApiResponse<List<ProvinceView>> getProvincePV() {
 
         return ApiResponse.success(loadDataService.getProvincePV());
+    }
+
+
+    @GetMapping("/getVideoClick")
+    public ApiResponse<List<VideoClicks>> getVideoClick() {
+
+
+        return ApiResponse.success(loadDataService.getVideoClicks());
     }
 
 

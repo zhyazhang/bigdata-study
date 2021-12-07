@@ -1,14 +1,13 @@
 package com.aifurion.display.service.impl;
 
 import com.aifurion.display.beans.ProvinceView;
+import com.aifurion.display.beans.VideoClicks;
 import com.aifurion.display.service.LoadDataService;
 import com.aifurion.display.utils.JedisPoolUtil;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ：zzy
@@ -19,6 +18,51 @@ import java.util.Map;
 
 @Service
 public class LoadDataServiceImpl implements LoadDataService {
+
+
+    /**
+     * 获得视频浏览量top 7
+     *
+     * @return top 7视频id和浏览次数
+     */
+    @Override
+    public List<VideoClicks> getVideoClicks() {
+
+        long start = System.currentTimeMillis();
+
+        List<VideoClicks> list = new ArrayList<>();
+        try (Jedis jedis = JedisPoolUtil.getConnection()) {
+
+            Map<String, String> map = jedis.hgetAll("videoPopCount");
+
+            ArrayList<Map.Entry<String, String>> arrayList = new ArrayList<>(map.entrySet());
+
+            Collections.sort(arrayList, Map.Entry.comparingByValue());
+
+
+            int size = arrayList.size();
+
+
+            for (int i = 1; i <= 7; i++) {
+                Map.Entry<String, String> entry = arrayList.get(size - i);
+
+                list.add(new VideoClicks(entry.getKey(), Integer.parseInt(entry.getValue())));
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        long end = System.currentTimeMillis();
+
+        System.out.println(end - start);
+
+
+        return list;
+    }
 
 
     /**
@@ -58,4 +102,6 @@ public class LoadDataServiceImpl implements LoadDataService {
 
         return list;
     }
+
+
 }
