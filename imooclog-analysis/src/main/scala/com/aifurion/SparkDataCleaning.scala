@@ -1,6 +1,5 @@
 package com.aifurion
 
-import com.aifurion.entity.BrowseFormatInfo
 import com.aifurion.utils.ip.IpHelper
 import com.aifurion.utils.{DateFormatUtil, PropertiesUtil, RegexUtil}
 import org.apache.commons.lang3.StringUtils
@@ -78,7 +77,8 @@ object SparkDataCleaning {
          */
 
 
-        val formatRdd: RDD[List[String]] = logDataRDD.map(line => {
+        val formatRdd: RDD[List[String]] = logDataRDD.map(
+            line => {
 
             val fields: Array[String] = line.split(" ")
             val ip: String = fields(0)
@@ -97,8 +97,9 @@ object SparkDataCleaning {
                 filter(item => !"-".equals(item(1)) && item(1).length > 10)
 
         val parsedRdd: RDD[Row] = formatRdd.map(line => parseLog(line))
-
         val parsedDF: DataFrame = spark.createDataFrame(parsedRdd, struct)
+
+
 
 
         //将清洗后的dataframe保存为parquet文件

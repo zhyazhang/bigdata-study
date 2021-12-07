@@ -12,6 +12,7 @@
         <module>logger</module>
         <module>mock</module>
         <module>realtime</module>
+
     </modules>
 
     <properties>
@@ -112,8 +113,6 @@
                 <artifactId>poi</artifactId>
                 <version>3.14</version>
             </dependency>
-
-
 
 
         </dependencies>

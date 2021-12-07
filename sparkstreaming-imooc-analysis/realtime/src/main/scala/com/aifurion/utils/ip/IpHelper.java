@@ -20,13 +20,13 @@ public class IpHelper {
 
     //private static final String ipFile = "ipDatabase.csv";
 
-    private static final String ipFile = "E:\\Workspase\\git\\bigdata-study\\imooclog-analysis" +
-            "\\src\\main\\resources\\ipDatabase.csv";
+    private static final String ipFile = "E:\\Workspase\\git\\bigdata-study\\sparkstreaming-imooc" +
+            "-analysis\\realtime\\src\\main\\resources\\ipDatabase.csv";
 
     //private static final String regionFile = "ipRegion.xlsx";
 
-    private static final String regionFile = "E:\\Workspase\\git\\bigdata-study\\imooclog" +
-            "-analysis\\src\\main\\resources\\ipRegion.xlsx";
+    private static final String regionFile = "E:\\Workspase\\git\\bigdata-study\\sparkstreaming" +
+            "-imooc-analysis\\realtime\\src\\main\\resources\\ipRegion.xlsx";
 
     static {
         buildTrain();
@@ -64,7 +64,7 @@ public class IpHelper {
         // <ipCode, province>
         Map<Integer, String> regionRelationMap = getRegionRelationMap();
 
-       // String file = IpHelper.class.getClassLoader().getResource(ipFile).getFile();
+        //String file = IpHelper.class.getClassLoader().getResource(ipFile).getFile();
 
         String file = ipFile;
 

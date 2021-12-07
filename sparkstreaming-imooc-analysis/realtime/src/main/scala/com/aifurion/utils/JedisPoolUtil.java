@@ -38,5 +38,4 @@ public class JedisPoolUtil {
         return jedisPool.getResource();
     }
 
-
 }
