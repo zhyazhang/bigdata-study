@@ -29,21 +29,26 @@ object CountTotalClick {
 
         var jedis: Jedis = null
         try {
-            value.foreachRDD(rdd => {
 
+            //求一个等待窗时间内的总点击量
+            value.foreachRDD(rdd => {
                 rdd.foreach(partition => {
                     jedis = JedisPoolUtil.getConnection
+                    //累加点击量
                     jedis.hincrBy("value", "totalclick", partition)
+                    //记录每个事件窗的瞬时点击量
+                    jedis.hset("value", "perclick", partition + "")
                 })
 
             })
+
+
         } catch {
             case ex: Exception =>
                 ex.printStackTrace()
         } finally {
             if (jedis != null) jedis.close()
         }
-
 
         context.start()
         context.awaitTermination()

@@ -1,6 +1,7 @@
 package com.aifurion.display.controller;
 
 import com.aifurion.display.beans.ProvinceView;
+import com.aifurion.display.beans.ValueView;
 import com.aifurion.display.beans.VideoClicks;
 import com.aifurion.display.common.ApiResponse;
 import com.aifurion.display.service.LoadDataService;
@@ -36,6 +37,20 @@ public class LoadDataController {
 
 
         return ApiResponse.success(loadDataService.getVideoClicks());
+    }
+
+
+    @GetMapping("/getProvinceTop")
+    public ApiResponse<List<ProvinceView>> getProvincePVTop() {
+
+        return ApiResponse.success(loadDataService.getProvincePVTopN());
+    }
+
+
+    @GetMapping("/getValueView")
+    public ApiResponse<ValueView> getValueView() {
+
+        return ApiResponse.success(loadDataService.getViewCount());
     }
 
 

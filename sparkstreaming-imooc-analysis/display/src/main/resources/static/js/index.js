@@ -649,40 +649,56 @@
                 // 连接文字线长(横线)
                 length2: 8
             },
-            data: [
-                {
-                    value: 26,
-                    name: '北京'
-                },
-                {
-                    value: 24,
-                    name: '山东'
-                },
-                {
-                    value: 25,
-                    name: '河北'
-                },
-                {
-                    value: 20,
-                    name: '江苏'
-                },
-                {
-                    value: 25,
-                    name: '浙江'
-                },
-                {
-                    value: 30,
-                    name: '四川'
-                },
-                {
-                    value: 42,
-                    name: '湖北'
-                }
-            ]
+            data: []
         }]
     };
 
     myChart.setOption(option);
+
+
+    //获取数据
+    function getData() {
+        $.ajax({
+            url: "/getProvinceTop",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.code === 0) {
+                    var res = data.data;
+                    var newArr = [];
+
+                    //获取到各个省份的数据
+                    for (var i = 0; i < res.length; i++) {
+                        var json = {
+                            name: res[i].province,
+                            value: res[i].count
+                        }
+                        newArr.push(json)
+                    }
+
+                    //使用指定的配置项和数据显示图表
+                    myChart.setOption({
+
+                        series: [
+                            {
+                                data: newArr
+                            }
+                        ]
+                    });
+                }
+            }
+        })
+    }
+
+    getData();
+
+    window.setInterval(function () {
+
+        getData();
+
+    }, 2000)
+
+
     window.addEventListener('resize', function () {
         myChart.resize();
     })
@@ -735,6 +751,23 @@
 
     //获取数据
     function getData() {
+
+
+        $.ajax({
+            url: "/getValueView",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.code === 0) {
+
+                    $("#value_view").find("li").remove();
+                    var res = data.data;
+                    $("#value_view").append("<li>" + res.totalclick + "</li>").append("<li>" + res.perclick + "</li>")
+                }
+            }
+        })
+
+
         $.ajax({
             url: "/getProvince",
             dataType: "json",
@@ -776,6 +809,8 @@
                 }
             }
         })
+
+
     }
 
     getData();
